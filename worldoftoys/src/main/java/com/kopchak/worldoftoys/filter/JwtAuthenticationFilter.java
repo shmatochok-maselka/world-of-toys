@@ -1,6 +1,7 @@
-package com.kopchak.worldoftoys.config;
+package com.kopchak.worldoftoys.filter;
 
-import com.kopchak.worldoftoys.token.TokenRepository;
+import com.kopchak.worldoftoys.service.JwtTokenService;
+import com.kopchak.worldoftoys.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    private final JwtTokenService jwtTokenService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
@@ -38,13 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
+        userEmail = jwtTokenService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
-            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+            if (jwtTokenService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

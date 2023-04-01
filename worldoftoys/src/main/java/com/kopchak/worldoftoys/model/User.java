@@ -1,6 +1,7 @@
-package com.kopchak.worldoftoys.user;
+package com.kopchak.worldoftoys.model;
 
-import com.kopchak.worldoftoys.token.Token;
+import com.kopchak.worldoftoys.model.Role;
+import com.kopchak.worldoftoys.model.Token;
 import jakarta.persistence.*;
 
 import java.util.Collection;

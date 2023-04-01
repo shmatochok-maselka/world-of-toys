@@ -1,12 +1,16 @@
-package com.kopchak.worldoftoys.auth;
+package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.config.JwtService;
+import com.kopchak.worldoftoys.dto.TokenAuthDto;
+import com.kopchak.worldoftoys.dto.UserAuthDto;
+import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
-import com.kopchak.worldoftoys.token.Token;
-import com.kopchak.worldoftoys.token.TokenRepository;
-import com.kopchak.worldoftoys.token.TokenType;
-import com.kopchak.worldoftoys.user.*;
+import com.kopchak.worldoftoys.model.Role;
+import com.kopchak.worldoftoys.model.Token;
+import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.repository.TokenRepository;
+import com.kopchak.worldoftoys.model.TokenType;
+import com.kopchak.worldoftoys.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,11 +23,11 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(UserRegisterDto userRegisterDto) {
+    public TokenAuthDto register(UserRegisterDto userRegisterDto) {
         if (isUserRegistered(userRegisterDto.getEmail())) {
             throw  new UsernameAlreadyExistException(HttpStatus.BAD_REQUEST, "Username already exist!");
         }
@@ -31,14 +35,14 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setRole(Role.USER);
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtTokenService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
+        return TokenAuthDto.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    public AuthenticationResponse authenticate(UserAuthDto userAuthDto) {
+    public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
         if(!isUserRegistered(userAuthDto.getEmail())){
             throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
         }
@@ -49,10 +53,10 @@ public class AuthenticationService {
                 )
         );
         var user = userRepository.findByEmail(userAuthDto.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtTokenService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
+        return TokenAuthDto.builder()
                 .token(jwtToken)
                 .build();
     }
@@ -80,6 +84,6 @@ public class AuthenticationService {
     }
 
     private boolean isUserRegistered(String email){
-        return !userRepository.findByEmail(email).isEmpty();
+        return userRepository.findByEmail(email).isPresent();
     }
 }

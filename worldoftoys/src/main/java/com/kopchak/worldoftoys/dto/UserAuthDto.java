@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.user;
+package com.kopchak.worldoftoys.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

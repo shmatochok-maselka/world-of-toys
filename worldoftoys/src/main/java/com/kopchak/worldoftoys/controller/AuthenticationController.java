@@ -1,7 +1,9 @@
-package com.kopchak.worldoftoys.auth;
+package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.user.UserAuthDto;
-import com.kopchak.worldoftoys.user.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.TokenAuthDto;
+import com.kopchak.worldoftoys.service.AuthenticationService;
+import com.kopchak.worldoftoys.dto.UserAuthDto;
+import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,13 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<TokenAuthDto> register(@RequestBody UserRegisterDto userRegisterDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.register(userRegisterDto));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserAuthDto userAuthDto) {
+    public ResponseEntity<TokenAuthDto> authenticate(@RequestBody UserAuthDto userAuthDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.authenticate(userAuthDto));
     }

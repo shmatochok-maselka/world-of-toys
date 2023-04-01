@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.user;
+package com.kopchak.worldoftoys.dto;
 
+import com.kopchak.worldoftoys.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.user;
+package com.kopchak.worldoftoys.model;
 
 public enum Role {
     USER,

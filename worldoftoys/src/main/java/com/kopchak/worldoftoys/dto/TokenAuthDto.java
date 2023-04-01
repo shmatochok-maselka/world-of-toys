@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.auth;
+package com.kopchak.worldoftoys.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class TokenAuthDto {
     private String token;
 }

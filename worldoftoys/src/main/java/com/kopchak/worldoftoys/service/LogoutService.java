@@ -1,6 +1,6 @@
-package com.kopchak.worldoftoys.config;
+package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.token.TokenRepository;
+import com.kopchak.worldoftoys.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.user;
+package com.kopchak.worldoftoys.repository;
 
+import com.kopchak.worldoftoys.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
