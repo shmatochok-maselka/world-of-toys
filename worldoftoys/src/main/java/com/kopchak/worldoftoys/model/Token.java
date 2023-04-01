@@ -1,25 +1,13 @@
 package com.kopchak.worldoftoys.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@Builder
+@MappedSuperclass
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Token {
-
+@Getter
+@Setter
+public abstract class Token {
     @Id
     @GeneratedValue
     public Integer id;
@@ -28,13 +16,15 @@ public class Token {
     public String token;
 
     @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
-
-    public boolean revoked;
-
-    public boolean expired;
+    public TokenType tokenType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     public User user;
+
+    public Token(String token, TokenType tokenType, User user) {
+        this.token = token;
+        this.tokenType = tokenType;
+        this.user = user;
+    }
 }

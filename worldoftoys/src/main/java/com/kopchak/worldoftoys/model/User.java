@@ -1,11 +1,6 @@
 package com.kopchak.worldoftoys.model;
 
-import com.kopchak.worldoftoys.model.Role;
-import com.kopchak.worldoftoys.model.Token;
 import jakarta.persistence.*;
-
-import java.util.Collection;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +8,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Builder
@@ -33,7 +31,7 @@ public class User implements UserDetails{
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    private List<AuthenticationToken> authenticationTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -6,7 +6,7 @@ import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
 import com.kopchak.worldoftoys.model.Role;
-import com.kopchak.worldoftoys.model.Token;
+import com.kopchak.worldoftoys.model.AuthenticationToken;
 import com.kopchak.worldoftoys.model.User;
 import com.kopchak.worldoftoys.repository.TokenRepository;
 import com.kopchak.worldoftoys.model.TokenType;
@@ -65,13 +65,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
+        var token = new AuthenticationToken(jwtToken, TokenType.BEARER, user, false, false);
+//                TokenAuth()
+//                TokenAuth.builder()
+//                .user(user)
+//                .token(jwtToken)
+//                .tokenType(TokenType.BEARER)
+//                .expired(false)
+//                .revoked(false)
+//                .build();
         tokenRepository.save(token);
     }
 
@@ -79,9 +81,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
+        validUserTokens.forEach(authenticationToken -> {
+            authenticationToken.setExpired(true);
+            authenticationToken.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
     }
