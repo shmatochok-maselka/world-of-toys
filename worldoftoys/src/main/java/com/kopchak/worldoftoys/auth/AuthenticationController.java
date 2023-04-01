@@ -1,5 +1,7 @@
 package com.kopchak.worldoftoys.auth;
 
+import com.kopchak.worldoftoys.user.UserAuthDto;
+import com.kopchak.worldoftoys.user.UserRegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +17,14 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
-        var authResponse = service.register(request);
-        if(authResponse == null){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.register(userRegisterDto));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserAuthDto userAuthDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(service.authenticate(userAuthDto));
     }
 }

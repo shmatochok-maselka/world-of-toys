@@ -1,13 +1,14 @@
 package com.kopchak.worldoftoys.auth;
 
 import com.kopchak.worldoftoys.config.JwtService;
+import com.kopchak.worldoftoys.exception.UserNotFoundException;
+import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
 import com.kopchak.worldoftoys.token.Token;
 import com.kopchak.worldoftoys.token.TokenRepository;
 import com.kopchak.worldoftoys.token.TokenType;
-import com.kopchak.worldoftoys.user.Role;
-import com.kopchak.worldoftoys.user.User;
-import com.kopchak.worldoftoys.user.UserRepository;
+import com.kopchak.worldoftoys.user.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,41 +17,38 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        if (repository.findByEmail(request.getEmail()).isEmpty()) {
-            var user = User.builder()
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
-                    .build();
-            var savedUser = repository.save(user);
-            var jwtToken = jwtService.generateToken(user);
-            saveUserToken(savedUser, jwtToken);
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
-        } else {
-            return null;
+    public AuthenticationResponse register(UserRegisterDto userRegisterDto) {
+        if (isUserRegistered(userRegisterDto.getEmail())) {
+            throw  new UsernameAlreadyExistException(HttpStatus.BAD_REQUEST, "Username already exist!");
         }
+        User user = userRegisterDto.toUser();
+        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        user.setRole(Role.USER);
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(UserAuthDto userAuthDto) {
+        if(!isUserRegistered(userAuthDto.getEmail())){
+            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                        userAuthDto.getEmail(),
+                        userAuthDto.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+        var user = userRepository.findByEmail(userAuthDto.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
@@ -79,5 +77,9 @@ public class AuthenticationService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
+    }
+
+    private boolean isUserRegistered(String email){
+        return !userRepository.findByEmail(email).isEmpty();
     }
 }
