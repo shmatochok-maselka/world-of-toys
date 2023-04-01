@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public interface AuthenticationService {
-    TokenAuthDto register(UserRegisterDto userRegisterDto);
+    String register(UserRegisterDto userRegisterDto);
     TokenAuthDto authenticate(UserAuthDto userAuthDto);
+    public String confirmToken(String token);
 }

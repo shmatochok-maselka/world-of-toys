@@ -20,6 +20,8 @@ public class UserRegisterDto {
                 .lastname(this.getLastname())
                 .email(this.getEmail())
                 .password(this.getPassword())
+                .enabled(false)
+                .locked(false)
                 .build();
     }
 }

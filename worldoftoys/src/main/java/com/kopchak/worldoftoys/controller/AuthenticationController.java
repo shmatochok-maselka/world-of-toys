@@ -7,10 +7,7 @@ import com.kopchak.worldoftoys.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -19,9 +16,15 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<TokenAuthDto> register(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<String> register(@RequestBody UserRegisterDto userRegisterDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authenticationService.register(userRegisterDto));
+    }
+
+    @GetMapping(path = "/confirm")
+    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authenticationService.confirmToken(token));
     }
 
     @PostMapping("/authenticate")
