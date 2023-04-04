@@ -3,19 +3,17 @@ package com.kopchak.worldoftoys.service.impl;
 import com.kopchak.worldoftoys.dto.TokenAuthDto;
 import com.kopchak.worldoftoys.dto.UserAuthDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
-import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
-import com.kopchak.worldoftoys.model.*;
-import com.kopchak.worldoftoys.repository.TokenRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
-import com.kopchak.worldoftoys.service.*;
+import com.kopchak.worldoftoys.service.AuthenticationService;
+import com.kopchak.worldoftoys.service.ConfirmationTokenService;
+import com.kopchak.worldoftoys.service.EmailSenderService;
+import com.kopchak.worldoftoys.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,8 +39,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
-        if (!userService.isUserRegistered(userAuthDto.getEmail())) {
+        String username = userAuthDto.getEmail();
+        if (!userService.isUserRegistered(username)) {
             throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+        }
+        if(!userService.isUserActivated(username)){
+            throw new UserNotFoundException(HttpStatus.FORBIDDEN, "Account is not activated!");
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -51,10 +53,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 )
         );
         String jwtToken = userService.saveUserAuthToken(userAuthDto.getEmail());
-//        var user = userRepository.findByEmail(userAuthDto.getEmail()).orElseThrow();
-//        var jwtToken = jwtTokenService.generateToken(user);
-//        revokeAllUserTokens(user);
-//        saveUserToken(user, jwtToken);
         return TokenAuthDto.builder()
                 .token(jwtToken)
                 .build();

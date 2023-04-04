@@ -39,8 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void enableUser(String email) {
-        var user = userRepository.findByEmail(email).orElseThrow();
+        User user = findUserByEmail(email);
         user.setEnabled(true);
+    }
+
+    public boolean isUserActivated(String email){
+        User user = findUserByEmail(email);
+        return user.getEnabled();
     }
 
     public String saveUserAuthToken(String email){

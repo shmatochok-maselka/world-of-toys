@@ -7,4 +7,5 @@ public interface UserService {
     boolean isUserRegistered(String email);
     void enableUser(String email);
     String saveUserAuthToken(String email);
+    boolean isUserActivated(String email);
 }
