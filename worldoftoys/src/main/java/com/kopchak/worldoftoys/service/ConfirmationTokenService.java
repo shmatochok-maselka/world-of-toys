@@ -11,4 +11,6 @@ public interface ConfirmationTokenService {
     Optional<ConfirmationToken> getToken(String token);
 
     int setConfirmedAt(String token);
+
+    ConfirmationToken createConfirmToken(String username);
 }

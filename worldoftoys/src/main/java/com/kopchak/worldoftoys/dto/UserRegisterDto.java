@@ -1,11 +1,11 @@
 package com.kopchak.worldoftoys.dto;
 
 import com.kopchak.worldoftoys.model.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class UserRegisterDto {
@@ -13,7 +13,17 @@ public class UserRegisterDto {
     private String lastname;
     private String email;
     private String password;
+    private Boolean enabled;
+    private Boolean locked;
 
+    public UserRegisterDto(User user) {
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.enabled = user.getEnabled();
+        this.locked = user.getLocked();
+    }
     public User toUser() {
         return User.builder()
                 .firstname(this.getFirstname())

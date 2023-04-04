@@ -16,20 +16,18 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRegisterDto userRegisterDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(authenticationService.register(userRegisterDto));
+    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDto) {
+        authenticationService.register(userRegisterDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/confirm")
     public ResponseEntity<String> confirm(@RequestParam("token") String token) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(authenticationService.confirmToken(token));
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.confirmToken(token));
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<TokenAuthDto> authenticate(@RequestBody UserAuthDto userAuthDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(authenticationService.authenticate(userAuthDto));
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.authenticate(userAuthDto));
     }
 }

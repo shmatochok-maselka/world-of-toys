@@ -32,10 +32,13 @@ public class User implements UserDetails{
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @JoinColumn(name = "user_id")
     private List<AuthenticationToken> authenticationTokens;
 
-    @OneToMany(mappedBy = "user")
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @JoinColumn(name = "user_id")
     private List<ConfirmationToken> confirmationTokens;
 
     @Override
