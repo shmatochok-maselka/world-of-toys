@@ -1,0 +1,69 @@
+package com.kopchak.worldoftoys.service.impl;
+
+import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.exception.UserNotFoundException;
+import com.kopchak.worldoftoys.model.*;
+import com.kopchak.worldoftoys.repository.TokenRepository;
+import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.service.JwtTokenService;
+import com.kopchak.worldoftoys.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+    private final JwtTokenService jwtTokenService;
+    private final PasswordEncoder passwordEncoder;
+    public UserRegisterDto registerUser(UserRegisterDto userRegisterDto){
+        User user = userRegisterDto.toUser();
+        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        user.setRole(Role.USER);
+        userRepository.save(user);
+        return new UserRegisterDto(user);
+    }
+
+    public boolean isUserRegistered(String email){
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    private User findUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() ->
+            new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+    }
+
+    public void enableUser(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow();
+        user.setEnabled(true);
+    }
+
+    public String saveUserAuthToken(String email){
+        var user = findUserByEmail(email);
+        var jwtToken = jwtTokenService.generateAuthToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return jwtToken;
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = new AuthenticationToken(jwtToken, TokenType.BEARER, user, false, false);
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(authenticationToken -> {
+            authenticationToken.setExpired(true);
+            authenticationToken.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
+}
