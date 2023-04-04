@@ -22,15 +22,11 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
-    private final TokenRepository tokenRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSenderService emailSenderService;
 
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void register(UserRegisterDto userRegisterDto) {
@@ -39,7 +35,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         userService.registerUser(userRegisterDto);
         var confirmationToken = confirmationTokenService.createConfirmToken(userRegisterDto.getEmail());
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
         emailSenderService.sendConfirmEmail(userRegisterDto.getEmail(), userRegisterDto.getFirstname(),
                 confirmationToken.getToken());
     }
@@ -63,14 +58,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return TokenAuthDto.builder()
                 .token(jwtToken)
                 .build();
-    }
-
-    @Transactional
-    public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() ->
-                new ConfirmationTokenExpiredException(HttpStatus.FORBIDDEN, "Confirmation link is expired!"));
-        confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(confirmationToken.getUser().getEmail());
-        return "Account activated! You can close this link.";
     }
 }
