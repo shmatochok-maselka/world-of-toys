@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "token")
 public class AuthenticationToken extends Token{
 
     public boolean revoked;

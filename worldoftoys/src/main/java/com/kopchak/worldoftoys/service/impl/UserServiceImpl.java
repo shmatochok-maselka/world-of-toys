@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
+import com.kopchak.worldoftoys.dto.UserDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.*;
@@ -38,6 +39,10 @@ public class UserServiceImpl implements UserService {
             new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
     }
 
+    public UserDto findUserByUsername(String email){
+        var user = findUserByEmail(email);
+        return new UserDto(user);
+    }
     public void enableUser(String email) {
         User user = findUserByEmail(email);
         user.setEnabled(true);

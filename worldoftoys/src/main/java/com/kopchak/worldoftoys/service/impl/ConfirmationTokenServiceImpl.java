@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.service.impl;
 
 import com.kopchak.worldoftoys.dto.ConfirmTokenDto;
+import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.ConfirmationToken;
@@ -29,14 +30,31 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public ConfirmTokenDto createConfirmToken(String username){
+    public ConfirmTokenDto createConfirmToken(String username) {
         var user = userRepository.findByEmail(username).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+        if (user.getEnabled()) {
+            throw new AccountIsAlreadyActivatedException(HttpStatus.CONFLICT, "Account is already activated!");
+        }
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(token, TokenType.CONFIRMATION, user,
-                LocalDateTime.now(), LocalDateTime.now().plusMinutes(15));
+//                LocalDateTime.now(), LocalDateTime.now().plusMinutes(15));
+                LocalDateTime.now(), LocalDateTime.now().plusMinutes(1));
         saveConfirmationToken(confirmationToken);
         return new ConfirmTokenDto(confirmationToken);
+    }
+
+    public boolean isValidTokenInTheList(Integer userId) {
+        var confirmTokensList = confirmationTokenRepository.findAllByUserId(userId);
+        if (!confirmTokensList.isEmpty()) {
+            for (ConfirmationToken confirmationToken : confirmTokensList) {
+                if (confirmationToken.getConfirmedAt() != null ||
+                        confirmationToken.getExpiresAt().isAfter(LocalDateTime.now())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

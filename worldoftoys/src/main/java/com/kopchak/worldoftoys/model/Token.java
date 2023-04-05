@@ -18,7 +18,7 @@ public abstract class Token {
     @Enumerated(EnumType.STRING)
     public TokenType tokenType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     public User user;
 

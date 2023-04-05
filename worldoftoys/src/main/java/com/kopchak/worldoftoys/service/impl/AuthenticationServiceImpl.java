@@ -34,9 +34,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userService.registerUser(userRegisterDto);
         var confirmationToken = confirmationTokenService.createConfirmToken(userRegisterDto.getEmail());
         emailSenderService.sendConfirmEmail(userRegisterDto.getEmail(), userRegisterDto.getFirstname(),
-                confirmationToken.getToken());
+                    confirmationToken.getToken());
     }
 
+    public void resendVerificationEmail(String email){
+        if (!userService.isUserRegistered(email)) {
+            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+        }
+        var user = userService.findUserByUsername(email);
+        if(!confirmationTokenService.isValidTokenInTheList(user.getId())){
+            var confirmationToken = confirmationTokenService.createConfirmToken(email);
+            emailSenderService.sendConfirmEmail(email, user.getFirstname(), confirmationToken.getToken());
+        }
+    }
     @Override
     public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
         String username = userAuthDto.getEmail();

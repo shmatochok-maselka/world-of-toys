@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.service;
 
+import com.kopchak.worldoftoys.dto.UserDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
 
 public interface UserService {
@@ -8,4 +9,5 @@ public interface UserService {
     void enableUser(String email);
     String saveUserAuthToken(String email);
     boolean isUserActivated(String email);
+    UserDto findUserByUsername(String email);
 }

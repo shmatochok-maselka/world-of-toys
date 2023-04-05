@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.kopchak.worldoftoys.dto.TokenAuthDto;
 import com.kopchak.worldoftoys.dto.UserAuthDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
@@ -20,6 +21,13 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterDto userRegisterDto) {
         authenticationService.register(userRegisterDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/resend-verification-email")
+    public ResponseEntity<?> resendVerificationEmail(@RequestBody JsonNode user) {
+        String username = user.get("email").asText();
+        authenticationService.resendVerificationEmail(username);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
