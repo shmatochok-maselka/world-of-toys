@@ -53,6 +53,10 @@ public class UserServiceImpl implements UserService {
         return user.getEnabled();
     }
 
+    public void updatePassword(String email, String newPassword){
+        User user = findUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
     public String saveUserAuthToken(String email){
         var user = findUserByEmail(email);
         var jwtToken = jwtTokenService.generateAuthToken(user);
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void saveUserToken(User user, String jwtToken) {
-        var token = new AuthenticationToken(jwtToken, TokenType.BEARER, user, false, false);
+        var token = new AuthenticationToken(jwtToken, user, AuthTokenType.BEARER, false, false);
         tokenRepository.save(token);
     }
 

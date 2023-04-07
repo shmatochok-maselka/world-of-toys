@@ -31,9 +31,22 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping("/reset_password")
+    public ResponseEntity<?> resetPassword(@RequestBody JsonNode user) {
+        String username = user.get("email").asText();
+        authenticationService.resetPassword(username);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @GetMapping(path = "/confirm")
     public ResponseEntity<String> confirm(@RequestParam("token") String token) {
         return ResponseEntity.status(HttpStatus.OK).body(confirmationTokenService.confirmToken(token));
+    }
+
+    @PostMapping(path = "/change_password")
+    public ResponseEntity<String> changePassword(@RequestParam("token") String token, @RequestBody JsonNode password) {
+        String newPassword = password.get("password").asText();
+        return ResponseEntity.status(HttpStatus.OK).body(confirmationTokenService.confirmResetToken(token, newPassword));
     }
 
     @PostMapping("/authenticate")

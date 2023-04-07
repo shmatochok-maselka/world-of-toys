@@ -16,6 +16,13 @@ import org.springframework.stereotype.Service;
 public class EmailSenderServiceImpl implements EmailSenderService {
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailSenderServiceImpl.class);
     private final String CONFIRM_LINK = "http://localhost:8080/api/v1/auth/confirm?token=";
+    private final String PASSWORD_RESET_LINK = "http://localhost:8080/api/v1/auth/change_password?token=";
+    private final String ACCOUNT_ACTIVATION_LINK_NAME = "Activate Now";
+    private final String PASSWORD_RESET_LINK_NAME = "Reset password";
+    private final String ACCOUNT_ACTIVATION_MSG =
+            "Thank you for registering. Please click on the below link to activate your account:";
+    private final String PASSWORD_RESET_MSG =
+            "Thank you for using our website. Please click on the below link to reset your password:";
     private final JavaMailSender mailSender;
 
     @Override
@@ -37,11 +44,18 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     public void sendConfirmEmail(String userEmail, String userFirstname, String confirmToken){
-        String email = buildEmail(userFirstname, CONFIRM_LINK + confirmToken);
+        String email = buildEmail(userFirstname, CONFIRM_LINK + confirmToken, ACCOUNT_ACTIVATION_MSG,
+                ACCOUNT_ACTIVATION_LINK_NAME);
         send(userEmail, email);
     }
 
-    private String buildEmail(String name, String link) {
+    public void sendResetPasswordEmail(String userEmail, String userFirstname, String confirmToken){
+        String email = buildEmail(userFirstname, PASSWORD_RESET_LINK + confirmToken, PASSWORD_RESET_MSG,
+                PASSWORD_RESET_LINK_NAME);
+        send(userEmail, email);
+    }
+
+    private String buildEmail(String name, String link, String message, String linkName) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -97,7 +111,10 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">" + message +
+        "</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">"
+//        Activate Now
+        + linkName + "</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
