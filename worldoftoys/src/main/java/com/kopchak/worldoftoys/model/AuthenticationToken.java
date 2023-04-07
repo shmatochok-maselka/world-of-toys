@@ -8,13 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class AuthenticationToken extends Token{
-
+    @Enumerated(EnumType.STRING)
+    public AuthTokenType tokenType;
     public boolean revoked;
 
     public boolean expired;
 
-    public AuthenticationToken(String token, TokenType tokenType, User user, boolean revoked, boolean expired) {
-        super(token, tokenType, user);
+    public AuthenticationToken(String token, User user, AuthTokenType tokenType, boolean revoked, boolean expired) {
+        super(token, user);
+        this.tokenType = tokenType;
         this.revoked = revoked;
         this.expired = expired;
     }

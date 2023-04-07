@@ -15,16 +15,12 @@ public abstract class Token {
     @Column(unique = true)
     public String token;
 
-    @Enumerated(EnumType.STRING)
-    public TokenType tokenType;
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     public User user;
 
-    public Token(String token, TokenType tokenType, User user) {
+    public Token(String token, User user) {
         this.token = token;
-        this.tokenType = tokenType;
         this.user = user;
     }
 }

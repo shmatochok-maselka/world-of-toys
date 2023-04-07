@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 public class ConfirmationToken extends Token{
+    @Enumerated(EnumType.STRING)
+    public ConfirmTokenType tokenType;
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -20,9 +22,10 @@ public class ConfirmationToken extends Token{
 
     private LocalDateTime confirmedAt;
 
-    public ConfirmationToken(String token, TokenType tokenType, User user,
+    public ConfirmationToken(String token, ConfirmTokenType tokenType, User user,
                              LocalDateTime createdAt, LocalDateTime expiresAt) {
-        super(token, tokenType, user);
+        super(token, user);
+        this.tokenType = tokenType;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
