@@ -6,6 +6,7 @@ import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
+import com.kopchak.worldoftoys.model.ConfirmTokenType;
 import com.kopchak.worldoftoys.service.AuthenticationService;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
 import com.kopchak.worldoftoys.service.EmailSenderService;
@@ -26,44 +27,55 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSenderService emailSenderService;
 
-
     @Override
     public void register(UserRegisterDto userRegisterDto) {
-        if (userService.isUserRegistered(userRegisterDto.getEmail())) {
+        String username = userRegisterDto.getEmail();
+        if (userService.isUserRegistered(username)) {
             throw new UsernameAlreadyExistException(HttpStatus.BAD_REQUEST, "Username already exist!");
         }
         userService.registerUser(userRegisterDto);
-        var confirmationToken = confirmationTokenService.createConfirmToken(userRegisterDto.getEmail());
-        emailSenderService.sendConfirmEmail(userRegisterDto.getEmail(), userRegisterDto.getFirstname(),
-                    confirmationToken.getToken());
+        var confirmationToken = confirmationTokenService.createConfirmToken(username,
+                ConfirmTokenType.ACTIVATION);
+        emailSenderService.sendConfirmEmail(username, userRegisterDto.getFirstname(),
+                confirmationToken.getToken(), ConfirmTokenType.ACTIVATION);
     }
 
-    public void resendVerificationEmail(String email){
+    @Override
+    public void resendVerificationEmail(String email) {
+        if (!userService.isUserRegistered(email)) {
+            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+        }
+        if (userService.isUserActivated(email)) {
+            throw new AccountIsAlreadyActivatedException(HttpStatus.CONFLICT, "Account is already activated");
+        }
+        var user = userService.findUserByUsername(email);
+        if (!confirmationTokenService.isValidActivationTokenExists(email)) {
+            var confirmationToken = confirmationTokenService.createConfirmToken(email,
+                    ConfirmTokenType.ACTIVATION);
+            emailSenderService.sendConfirmEmail(email, user.getFirstname(), confirmationToken.getToken(),
+                    ConfirmTokenType.ACTIVATION);
+        }
+    }
+
+    @Override
+    public void resetPassword(String email) {
         if (!userService.isUserRegistered(email)) {
             throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
         }
         var user = userService.findUserByUsername(email);
-        if(!confirmationTokenService.isValidTokenInTheList(user.getId())){
-            var confirmationToken = confirmationTokenService.createConfirmToken(email);
-            emailSenderService.sendConfirmEmail(email, user.getFirstname(), confirmationToken.getToken());
-        }
+        var confirmationToken = confirmationTokenService.createConfirmToken(email,
+                ConfirmTokenType.RESET_PASSWORD);
+        emailSenderService.sendConfirmEmail(email, user.getFirstname(), confirmationToken.getToken(),
+                ConfirmTokenType.RESET_PASSWORD);
     }
 
-    public void resetPassword(String email){
-        if (!userService.isUserRegistered(email)) {
-            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
-        }
-        var user = userService.findUserByUsername(email);
-        var confirmationToken = confirmationTokenService.createResetPasswordToken(email);
-            emailSenderService.sendResetPasswordEmail(email, user.getFirstname(), confirmationToken.getToken());
-    }
     @Override
     public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
         String username = userAuthDto.getEmail();
         if (!userService.isUserRegistered(username)) {
             throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
         }
-        if(!userService.isUserActivated(username)){
+        if (!userService.isUserActivated(username)) {
             throw new UserNotFoundException(HttpStatus.FORBIDDEN, "Account is not activated!");
         }
         authenticationManager.authenticate(

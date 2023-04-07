@@ -1,18 +1,18 @@
 package com.kopchak.worldoftoys.service.impl;
 
 import com.kopchak.worldoftoys.dto.ConfirmTokenDto;
-import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.ConfirmationToken;
 import com.kopchak.worldoftoys.model.ConfirmTokenType;
+import com.kopchak.worldoftoys.model.ConfirmationToken;
+import com.kopchak.worldoftoys.model.User;
 import com.kopchak.worldoftoys.repository.ConfirmationTokenRepository;
 import com.kopchak.worldoftoys.repository.UserRepository;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
-import com.kopchak.worldoftoys.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,47 +23,33 @@ import java.util.UUID;
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     private void saveConfirmationToken(ConfirmationToken token) {
         confirmationTokenRepository.save(token);
     }
 
-    @Override
-    public ConfirmTokenDto createConfirmToken(String username) {
+    public ConfirmTokenDto createConfirmToken(String username, ConfirmTokenType tokenType) {
         var user = userRepository.findByEmail(username).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
-        if (user.getEnabled()) {
-            throw new AccountIsAlreadyActivatedException(HttpStatus.CONFLICT, "Account is already activated!");
-        }
         String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, ConfirmTokenType.ACTIVATION, user,
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, tokenType, user,
                 LocalDateTime.now(), LocalDateTime.now().plusMinutes(15));
         saveConfirmationToken(confirmationToken);
         return new ConfirmTokenDto(confirmationToken);
     }
 
-    public ConfirmTokenDto createResetPasswordToken(String username) {
-        var user = userRepository.findByEmail(username).orElseThrow(() ->
+    public boolean isValidActivationTokenExists(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
-        if (!user.getEnabled()) {
-            throw new UserNotFoundException(HttpStatus.CONFLICT, "Account is not activated!");
-        }
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, ConfirmTokenType.RESET_PASSWORD, user,
-                LocalDateTime.now(), LocalDateTime.now().plusMinutes(15));
-        saveConfirmationToken(confirmationToken);
-        return new ConfirmTokenDto(confirmationToken);
-    }
-
-    public boolean isValidTokenInTheList(Integer userId) {
-        var confirmTokensList = confirmationTokenRepository.findAllByUserId(userId);
-        if (!confirmTokensList.isEmpty()) {
-            for (ConfirmationToken confirmationToken : confirmTokensList) {
-                if (confirmationToken.getConfirmedAt() != null ||
-                        confirmationToken.getExpiresAt().isAfter(LocalDateTime.now())) {
-                    return true;
-                }
+        var confirmTokensList = confirmationTokenRepository
+                .findAllByUserId(user.getId())
+                .stream()
+                .filter(confirmToken -> confirmToken.getTokenType() == ConfirmTokenType.ACTIVATION)
+                .toList();
+        for (ConfirmationToken confirmationToken : confirmTokensList) {
+            if (confirmationToken.getExpiresAt().isAfter(LocalDateTime.now())) {
+                return true;
             }
         }
         return false;
@@ -74,7 +60,8 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = getToken(token);
         setConfirmedAt(token);
-        userService.enableUser(confirmationToken.getUser().getEmail());
+        User user = confirmationToken.getUser();
+        user.setEnabled(true);
         return "Account activated! You can close this link.";
     }
 
@@ -83,8 +70,10 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public String confirmResetToken(String token, String newPassword) {
         ConfirmationToken confirmationToken = getToken(token);
         setConfirmedAt(token);
-//        userService.enableUser(confirmationToken.getUser().getEmail());
-        userService.updatePassword(confirmationToken.getUser().getEmail(), newPassword);
+        String email = confirmationToken.getUser().getEmail();
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+        user.setPassword(passwordEncoder.encode(newPassword));
         return "Password successfully changed!";
     }
 

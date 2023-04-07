@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class AuthenticationToken extends Token{
     @Enumerated(EnumType.STRING)
-    public AuthTokenType tokenType;
-    public boolean revoked;
+    private AuthTokenType tokenType;
+    private boolean revoked;
 
-    public boolean expired;
+    private boolean expired;
 
     public AuthenticationToken(String token, User user, AuthTokenType tokenType, boolean revoked, boolean expired) {
         super(token, user);

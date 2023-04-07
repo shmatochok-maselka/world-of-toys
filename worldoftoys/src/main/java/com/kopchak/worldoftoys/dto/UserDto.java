@@ -8,17 +8,24 @@ import lombok.*;
 @Getter
 @Setter
 public class UserDto {
-    private Integer id;
     private String firstname;
     private String lastname;
     private String email;
     private String password;
 
     public UserDto(User user) {
-        this.id = user.getId();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
         this.email = user.getEmail();
         this.password = user.getPassword();
+    }
+
+    public User toUser(){
+        return User.builder()
+                .firstname(this.getFirstname())
+                .lastname(this.getLastname())
+                .email(this.getEmail())
+                .password(this.getPassword())
+                .build();
     }
 }

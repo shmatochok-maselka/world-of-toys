@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
+import com.kopchak.worldoftoys.model.ConfirmTokenType;
 import com.kopchak.worldoftoys.service.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class EmailSenderServiceImpl implements EmailSenderService {
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailSenderServiceImpl.class);
     private final String CONFIRM_LINK = "http://localhost:8080/api/v1/auth/confirm?token=";
-    private final String PASSWORD_RESET_LINK = "http://localhost:8080/api/v1/auth/change_password?token=";
+    private final String PASSWORD_RESET_LINK = "http://localhost:8080/api/v1/auth/forgot-password?token=";
     private final String ACCOUNT_ACTIVATION_LINK_NAME = "Activate Now";
     private final String PASSWORD_RESET_LINK_NAME = "Reset password";
     private final String ACCOUNT_ACTIVATION_MSG =
@@ -43,15 +44,17 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         }
     }
 
-    public void sendConfirmEmail(String userEmail, String userFirstname, String confirmToken){
-        String email = buildEmail(userFirstname, CONFIRM_LINK + confirmToken, ACCOUNT_ACTIVATION_MSG,
-                ACCOUNT_ACTIVATION_LINK_NAME);
-        send(userEmail, email);
-    }
-
-    public void sendResetPasswordEmail(String userEmail, String userFirstname, String confirmToken){
-        String email = buildEmail(userFirstname, PASSWORD_RESET_LINK + confirmToken, PASSWORD_RESET_MSG,
-                PASSWORD_RESET_LINK_NAME);
+    @Override
+    public void sendConfirmEmail
+            (String userEmail, String userFirstname, String confirmToken, ConfirmTokenType tokenType){
+        String email;
+        if(tokenType == ConfirmTokenType.ACTIVATION){
+            email = buildEmail(userFirstname, CONFIRM_LINK + confirmToken, ACCOUNT_ACTIVATION_MSG,
+                    ACCOUNT_ACTIVATION_LINK_NAME);
+        }else{
+            email = buildEmail(userFirstname, PASSWORD_RESET_LINK + confirmToken, PASSWORD_RESET_MSG,
+                    PASSWORD_RESET_LINK_NAME);
+        }
         send(userEmail, email);
     }
 

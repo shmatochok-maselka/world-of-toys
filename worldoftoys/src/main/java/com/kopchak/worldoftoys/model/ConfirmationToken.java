@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 public class ConfirmationToken extends Token{
     @Enumerated(EnumType.STRING)
-    public ConfirmTokenType tokenType;
+    private ConfirmTokenType tokenType;
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

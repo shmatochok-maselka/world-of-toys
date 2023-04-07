@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final TokenRepository tokenRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
+
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto){
         User user = userRegisterDto.toUser();
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
@@ -43,20 +44,12 @@ public class UserServiceImpl implements UserService {
         var user = findUserByEmail(email);
         return new UserDto(user);
     }
-    public void enableUser(String email) {
-        User user = findUserByEmail(email);
-        user.setEnabled(true);
-    }
 
     public boolean isUserActivated(String email){
         User user = findUserByEmail(email);
         return user.getEnabled();
     }
 
-    public void updatePassword(String email, String newPassword){
-        User user = findUserByEmail(email);
-        user.setPassword(passwordEncoder.encode(newPassword));
-    }
     public String saveUserAuthToken(String email){
         var user = findUserByEmail(email);
         var jwtToken = jwtTokenService.generateAuthToken(user);
