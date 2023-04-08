@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void register(UserRegisterDto userRegisterDto) {
         String username = userRegisterDto.getEmail();
         if (userService.isUserRegistered(username)) {
-            throw new UsernameAlreadyExistException(HttpStatus.BAD_REQUEST, "Username already exist!");
+            throw new UsernameAlreadyExistException(HttpStatus.CONFLICT, "Username already exist!");
         }
         userService.registerUser(userRegisterDto);
         var confirmationToken = confirmationTokenService.createConfirmToken(username,
@@ -43,7 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void resendVerificationEmail(String email) {
         if (!userService.isUserRegistered(email)) {
-            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND, "Username does not exist!");
         }
         if (userService.isUserActivated(email)) {
             throw new AccountIsAlreadyActivatedException(HttpStatus.CONFLICT, "Account is already activated");
@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void resetPassword(String email) {
         if (!userService.isUserRegistered(email)) {
-            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND, "Username does not exist!");
         }
         var user = userService.findUserByUsername(email);
         var confirmationToken = confirmationTokenService.createConfirmToken(email,
@@ -72,8 +72,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
         String username = userAuthDto.getEmail();
-        if (!userService.isUserRegistered(username)) {
-            throw new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!");
+        if (!userService.isUserRegistered(username) || !userService.isPasswordValid(userAuthDto)) {
+            throw new UserNotFoundException(HttpStatus.UNAUTHORIZED, "Bad user credentials!");
         }
         if (!userService.isUserActivated(username)) {
             throw new UserNotFoundException(HttpStatus.FORBIDDEN, "Account is not activated!");

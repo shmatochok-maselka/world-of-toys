@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
+import com.kopchak.worldoftoys.dto.UserAuthDto;
 import com.kopchak.worldoftoys.dto.UserDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService {
         return jwtToken;
     }
 
+    public boolean isPasswordValid(UserAuthDto userAuthDto){
+        User user = findUserByEmail(userAuthDto.getEmail());
+        String enteredPassword = passwordEncoder.encode(userAuthDto.getPassword());
+        return user.getPassword().equals(enteredPassword);
+    }
     private void saveUserToken(User user, String jwtToken) {
         var token = new AuthenticationToken(jwtToken, user, AuthTokenType.BEARER, false, false);
         tokenRepository.save(token);

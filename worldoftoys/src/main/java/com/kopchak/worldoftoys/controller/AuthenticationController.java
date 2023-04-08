@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(value = {"http://localhost:4200", "http://localhost:8080"})
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -28,14 +29,14 @@ public class AuthenticationController {
     public ResponseEntity<?> resendVerificationEmail(@RequestBody JsonNode user) {
         String username = user.get("email").asText();
         authenticationService.resendVerificationEmail(username);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody JsonNode user) {
         String username = user.get("email").asText();
         authenticationService.resetPassword(username);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = "/confirm")
