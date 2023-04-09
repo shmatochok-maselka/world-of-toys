@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -13,11 +14,14 @@ import java.time.LocalDateTime;
 @Entity
 public class ConfirmationToken extends Token{
     @Enumerated(EnumType.STRING)
+    @NonNull
     private ConfirmTokenType tokenType;
     @Column(nullable = false)
+    @NonNull
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    @NonNull
     private LocalDateTime expiresAt;
 
     private LocalDateTime confirmedAt;

@@ -2,6 +2,7 @@ package com.kopchak.worldoftoys.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.NonNull;
 
 @MappedSuperclass
 @NoArgsConstructor
@@ -13,10 +14,12 @@ public abstract class Token {
     public Integer id;
 
     @Column(unique = true)
+    @NonNull
     public String token;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
+    @NonNull
     public User user;
 
     public Token(String token, User user) {

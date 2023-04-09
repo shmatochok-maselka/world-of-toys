@@ -3,6 +3,7 @@ package com.kopchak.worldoftoys.service.impl;
 import com.kopchak.worldoftoys.dto.TokenAuthDto;
 import com.kopchak.worldoftoys.dto.UserAuthDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.UsernameDto;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
@@ -41,7 +42,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void resendVerificationEmail(String email) {
+    public void resendVerificationEmail(UsernameDto username) {
+        String email = username.getEmail();
         if (!userService.isUserRegistered(email)) {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND, "Username does not exist!");
         }
@@ -58,7 +60,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void resetPassword(String email) {
+    public void resetPassword(UsernameDto username) {
+        String email = username.getEmail();
         if (!userService.isUserRegistered(email)) {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND, "Username does not exist!");
         }

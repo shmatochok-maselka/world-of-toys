@@ -1,11 +1,9 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.kopchak.worldoftoys.dto.TokenAuthDto;
-import com.kopchak.worldoftoys.dto.UserAuthDto;
-import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.*;
 import com.kopchak.worldoftoys.service.AuthenticationService;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +18,19 @@ public class AuthenticationController {
     private final ConfirmationTokenService confirmationTokenService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         authenticationService.register(userRegisterDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/resend-verification-email")
-    public ResponseEntity<?> resendVerificationEmail(@RequestBody JsonNode user) {
-        String username = user.get("email").asText();
+    public ResponseEntity<?> resendVerificationEmail(@Valid @RequestBody UsernameDto username) {
         authenticationService.resendVerificationEmail(username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody JsonNode user) {
-        String username = user.get("email").asText();
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody UsernameDto username) {
         authenticationService.resetPassword(username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -45,14 +41,14 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/forgot-password")
-    public ResponseEntity<String> changePassword(@RequestParam("token") String token, @RequestBody JsonNode password) {
-        String newPassword = password.get("password").asText();
+    public ResponseEntity<String> changePassword(@RequestParam("token") String token,
+                                                 @Valid @RequestBody PasswordResetDto newPassword) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(confirmationTokenService.confirmResetToken(token, newPassword));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<TokenAuthDto> authenticate(@RequestBody UserAuthDto userAuthDto) {
+    public ResponseEntity<TokenAuthDto> authenticate(@Valid @RequestBody UserAuthDto userAuthDto) {
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.authenticate(userAuthDto));
     }
 }
