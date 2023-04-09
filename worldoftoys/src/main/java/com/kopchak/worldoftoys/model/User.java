@@ -23,7 +23,7 @@ import java.util.List;
 @Entity
 public class User implements UserDetails{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 60)

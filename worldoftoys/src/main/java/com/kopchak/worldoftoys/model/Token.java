@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 @Setter
 public abstract class Token {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @Column(unique = true)
