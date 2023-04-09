@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserRegisterDto registerUser(UserRegisterDto userRegisterDto){
+    public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
         User user = userRegisterDto.toUser();
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setRole(Role.USER);
@@ -32,26 +32,26 @@ public class UserServiceImpl implements UserService {
         return new UserRegisterDto(user);
     }
 
-    public boolean isUserRegistered(String email){
+    public boolean isUserRegistered(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private User findUserByEmail(String email){
+    private User findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() ->
-            new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
     }
 
-    public UserDto findUserByUsername(String email){
+    public UserDto findUserByUsername(String email) {
         var user = findUserByEmail(email);
         return new UserDto(user);
     }
 
-    public boolean isUserActivated(String email){
+    public boolean isUserActivated(String email) {
         User user = findUserByEmail(email);
         return user.getEnabled();
     }
 
-    public String saveUserAuthToken(String email){
+    public String saveUserAuthToken(String email) {
         var user = findUserByEmail(email);
         var jwtToken = jwtTokenService.generateAuthToken(user);
         revokeAllUserTokens(user);
@@ -59,11 +59,11 @@ public class UserServiceImpl implements UserService {
         return jwtToken;
     }
 
-    public boolean isPasswordValid(UserAuthDto userAuthDto){
+    public boolean isPasswordValid(UserAuthDto userAuthDto) {
         User user = findUserByEmail(userAuthDto.getEmail());
-        String enteredPassword = passwordEncoder.encode(userAuthDto.getPassword());
-        return user.getPassword().equals(enteredPassword);
+        return passwordEncoder.matches(userAuthDto.getPassword(), user.getPassword());
     }
+
     private void saveUserToken(User user, String jwtToken) {
         var token = new AuthenticationToken(jwtToken, user, AuthTokenType.BEARER, false, false);
         tokenRepository.save(token);
