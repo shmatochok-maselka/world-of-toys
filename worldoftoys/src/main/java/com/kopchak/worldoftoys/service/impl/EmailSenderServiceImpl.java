@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.model.ConfirmTokenType;
+import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
 import com.kopchak.worldoftoys.service.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

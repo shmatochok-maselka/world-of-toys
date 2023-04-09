@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.productcategory;
 
+import com.kopchak.worldoftoys.model.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-public class BrandCategory extends ProductCategories{
+public class AgeCategory extends ProductCategories {
     @ManyToMany
-    private Set<TypeCategory> typeCategories;
+    private Set<Product> products;
 }

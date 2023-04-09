@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.token;
 
 public enum ConfirmTokenType {
     ACTIVATION,

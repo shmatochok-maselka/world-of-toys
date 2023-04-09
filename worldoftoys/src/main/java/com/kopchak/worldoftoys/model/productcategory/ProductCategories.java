@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.productcategory;
 
+import com.kopchak.worldoftoys.model.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

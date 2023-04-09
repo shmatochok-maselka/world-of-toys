@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.repository;
 
-import com.kopchak.worldoftoys.model.ConfirmationToken;
+import com.kopchak.worldoftoys.model.token.ConfirmationToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

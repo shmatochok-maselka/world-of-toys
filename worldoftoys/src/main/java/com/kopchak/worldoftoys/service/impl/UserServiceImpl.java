@@ -5,6 +5,8 @@ import com.kopchak.worldoftoys.dto.UserDto;
 import com.kopchak.worldoftoys.dto.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.*;
+import com.kopchak.worldoftoys.model.token.AuthTokenType;
+import com.kopchak.worldoftoys.model.token.AuthenticationToken;
 import com.kopchak.worldoftoys.repository.TokenRepository;
 import com.kopchak.worldoftoys.repository.UserRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;

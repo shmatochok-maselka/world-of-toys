@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.token;
 
+import com.kopchak.worldoftoys.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-public class ConfirmationToken extends Token{
+public class ConfirmationToken extends Token {
     @Enumerated(EnumType.STRING)
     @NonNull
     private ConfirmTokenType tokenType;

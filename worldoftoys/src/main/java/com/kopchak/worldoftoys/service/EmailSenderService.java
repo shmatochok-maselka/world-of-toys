@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.model.ConfirmTokenType;
+import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
 
 public interface EmailSenderService {
     void send(String to, String email);

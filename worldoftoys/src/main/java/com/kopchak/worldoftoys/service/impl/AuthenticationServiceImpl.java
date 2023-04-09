@@ -7,7 +7,7 @@ import com.kopchak.worldoftoys.dto.UsernameDto;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
-import com.kopchak.worldoftoys.model.ConfirmTokenType;
+import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
 import com.kopchak.worldoftoys.service.AuthenticationService;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
 import com.kopchak.worldoftoys.service.EmailSenderService;

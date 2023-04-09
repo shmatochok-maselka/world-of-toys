@@ -3,7 +3,7 @@ package com.kopchak.worldoftoys.repository;
 import java.util.List;
 import java.util.Optional;
 
-import com.kopchak.worldoftoys.model.AuthenticationToken;
+import com.kopchak.worldoftoys.model.token.AuthenticationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

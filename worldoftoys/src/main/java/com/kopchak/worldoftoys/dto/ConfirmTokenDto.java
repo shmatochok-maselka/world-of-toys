@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.dto;
 
-import com.kopchak.worldoftoys.model.ConfirmationToken;
+import com.kopchak.worldoftoys.model.token.ConfirmationToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

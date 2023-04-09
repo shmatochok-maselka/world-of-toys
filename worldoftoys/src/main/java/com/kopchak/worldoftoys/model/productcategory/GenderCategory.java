@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.productcategory;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class OriginCategory extends ProductCategories{
+public class GenderCategory extends ProductCategories {
 
 }

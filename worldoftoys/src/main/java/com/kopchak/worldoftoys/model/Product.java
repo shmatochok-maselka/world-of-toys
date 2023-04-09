@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.model;
 
+import com.kopchak.worldoftoys.model.productcategory.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,26 +25,26 @@ public class Product {
 
     private String image;
 
-    private int price;
-
-    @ManyToOne
-    @JoinColumn(name = "age_category_id")
-    private AgeCategory ageCategory;
+    private Double price;
 
 
     @ManyToOne
-    @JoinColumn(name = "origin_category_id")
+    @JoinColumn(name = "origin_id")
     private OriginCategory originCategory;
 
 
     @ManyToOne
-    @JoinColumn(name = "gender_category_id")
+    @JoinColumn(name = "gender_id")
     private GenderCategory genderCategory;
 
-    @ManyToMany
-    private Set<TypeCategory> typeCategories;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private BrandCategory brandCategory;
 
     @ManyToOne
-    @JoinColumn(name = "brand_category_id")
-    private BrandCategory brandCategory;
+    @JoinColumn(name = "type_id")
+    private TypeCategory typeCategory;
+
+    @ManyToMany
+    private Set<AgeCategory> ageCategory;
 }

@@ -1,5 +1,6 @@
-package com.kopchak.worldoftoys.model;
+package com.kopchak.worldoftoys.model.token;
 
+import com.kopchak.worldoftoys.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.NonNull;
