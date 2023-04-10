@@ -7,7 +7,7 @@ import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.*;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
-import com.kopchak.worldoftoys.repository.TokenRepository;
+import com.kopchak.worldoftoys.repository.AuthTokenRepository;
 import com.kopchak.worldoftoys.repository.UserRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;
 import com.kopchak.worldoftoys.service.UserService;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
+    private final AuthTokenRepository authTokenRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
 
@@ -68,17 +68,17 @@ public class UserServiceImpl implements UserService {
 
     private void saveUserToken(User user, String jwtToken) {
         var token = new AuthenticationToken(jwtToken, user, AuthTokenType.BEARER, false, false);
-        tokenRepository.save(token);
+        authTokenRepository.save(token);
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        var validUserTokens = authTokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(authenticationToken -> {
             authenticationToken.setExpired(true);
             authenticationToken.setRevoked(true);
         });
-        tokenRepository.saveAll(validUserTokens);
+        authTokenRepository.saveAll(validUserTokens);
     }
 }

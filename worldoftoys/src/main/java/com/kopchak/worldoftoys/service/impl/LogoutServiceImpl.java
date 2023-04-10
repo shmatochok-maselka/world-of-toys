@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.repository.TokenRepository;
+import com.kopchak.worldoftoys.repository.AuthTokenRepository;
 import com.kopchak.worldoftoys.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LogoutServiceImpl implements LogoutService{
-    private final TokenRepository tokenRepository;
+    private final AuthTokenRepository authTokenRepository;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -22,12 +22,12 @@ public class LogoutServiceImpl implements LogoutService{
             return;
         }
         jwt = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
+        var storedToken = authTokenRepository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
+            authTokenRepository.save(storedToken);
             SecurityContextHolder.clearContext();
         }
     }

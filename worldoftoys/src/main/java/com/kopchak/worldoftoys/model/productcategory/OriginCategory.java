@@ -17,5 +17,4 @@ import java.util.Set;
 public class OriginCategory extends ProductCategories {
     @OneToMany(mappedBy = "originCategory")
     private Set<Product> products;
-
 }

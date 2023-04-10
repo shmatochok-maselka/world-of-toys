@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kopchak.worldoftoys.model.productcategory.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,11 +28,9 @@ public class Product {
 
     private Double price;
 
-
     @ManyToOne
     @JoinColumn(name = "origin_id")
     private OriginCategory originCategory;
-
 
     @ManyToOne
     @JoinColumn(name = "gender_id")

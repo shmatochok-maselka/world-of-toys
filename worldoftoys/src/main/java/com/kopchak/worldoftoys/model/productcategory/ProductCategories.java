@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class ProductCategories {
+public class ProductCategories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
