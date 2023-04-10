@@ -14,6 +14,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class AgeCategory extends ProductCategories {
-    @ManyToMany
+    @ManyToMany(mappedBy = "ageCategory")
     private Set<Product> products;
 }

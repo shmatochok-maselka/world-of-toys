@@ -18,7 +18,4 @@ public abstract class ProductCategories {
     private Integer id;
 
     private String name;
-
-    @OneToMany
-    private Set<Product> products;
 }
