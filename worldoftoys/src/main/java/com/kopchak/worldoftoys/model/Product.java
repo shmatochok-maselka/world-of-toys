@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.slugify.Slugify;
 import com.kopchak.worldoftoys.model.productcategory.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,8 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String name;
+    private String slug;
 
     private String description;
 
@@ -46,4 +47,11 @@ public class Product {
 
     @ManyToMany
     private Set<AgeCategory> ageCategory;
+
+    @PrePersist
+    public void setSlug() {
+        final Slugify slg = Slugify.builder().transliterator(true).build();
+        this.slug = slg.slugify(this.name);
+    }
+
 }

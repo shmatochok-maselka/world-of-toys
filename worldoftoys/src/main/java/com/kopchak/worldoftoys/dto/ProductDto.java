@@ -16,9 +16,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
-
     private String name;
-
+    private String slug;
     private String description;
 
     private String image;
@@ -37,6 +36,7 @@ public class ProductDto {
 
     public ProductDto(Product product) {
         this.name = product.getName();
+        this.slug = product.getSlug();
         this.description = product.getDescription();
         this.image = product.getImage();
         this.price = product.getPrice();

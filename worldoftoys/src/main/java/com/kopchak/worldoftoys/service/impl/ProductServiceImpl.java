@@ -65,6 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Set<ProductDto> getAllProducts(){
+        productRepository.findAll().stream().forEach(Product::setSlug);
         return productRepository.findAll().stream().map(ProductDto::new).collect(Collectors.toSet());
     }
 }
