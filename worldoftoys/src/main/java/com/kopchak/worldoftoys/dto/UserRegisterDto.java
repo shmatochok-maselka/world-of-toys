@@ -6,12 +6,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRegisterDto {
     @NotBlank(message = "Firstname is mandatory")
     @Size(max = 60, message = "Firstname must be up to 60 characters long")

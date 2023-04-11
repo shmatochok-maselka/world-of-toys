@@ -1,17 +1,13 @@
 package com.kopchak.worldoftoys.dto;
 
 import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.model.productcategory.*;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,13 +1,11 @@
 package com.kopchak.worldoftoys.dto;
 
 import com.kopchak.worldoftoys.model.token.ConfirmationToken;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.NonNull;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

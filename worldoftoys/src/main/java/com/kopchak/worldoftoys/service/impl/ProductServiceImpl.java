@@ -6,8 +6,6 @@ import com.kopchak.worldoftoys.dto.ProductDto;
 import com.kopchak.worldoftoys.dto.TypeCategoryDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.model.productcategory.ProductCategories;
-import com.kopchak.worldoftoys.model.productcategory.TypeCategory;
 import com.kopchak.worldoftoys.repository.ProductRepository;
 import com.kopchak.worldoftoys.repository.productcategory.AgeCategoryRepository;
 import com.kopchak.worldoftoys.repository.productcategory.GenderCategoryRepository;
@@ -18,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

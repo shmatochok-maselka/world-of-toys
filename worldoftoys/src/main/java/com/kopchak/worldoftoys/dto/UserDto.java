@@ -3,11 +3,11 @@ package com.kopchak.worldoftoys.dto;
 import com.kopchak.worldoftoys.model.User;
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     private String firstname;
     private String lastname;
@@ -21,12 +21,4 @@ public class UserDto {
         this.password = user.getPassword();
     }
 
-    public User toUser(){
-        return User.builder()
-                .firstname(this.getFirstname())
-                .lastname(this.getLastname())
-                .email(this.getEmail())
-                .password(this.getPassword())
-                .build();
-    }
 }
