@@ -1,12 +1,16 @@
 package com.kopchak.worldoftoys.model.token;
 
 import com.kopchak.worldoftoys.model.User;
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.lang.NonNull;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class AuthenticationToken extends Token {
