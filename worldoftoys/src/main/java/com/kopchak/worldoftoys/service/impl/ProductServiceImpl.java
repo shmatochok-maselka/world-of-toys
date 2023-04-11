@@ -5,10 +5,9 @@ import com.kopchak.worldoftoys.dto.ProductCategoryDto;
 import com.kopchak.worldoftoys.dto.ProductDto;
 import com.kopchak.worldoftoys.dto.TypeCategoryDto;
 import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.model.productcategory.ProductCategories;
 import com.kopchak.worldoftoys.model.productcategory.TypeCategory;
-import com.kopchak.worldoftoys.repository.productcategory.AgeCategoryRepository;
 import com.kopchak.worldoftoys.repository.ProductRepository;
+import com.kopchak.worldoftoys.repository.productcategory.AgeCategoryRepository;
 import com.kopchak.worldoftoys.repository.productcategory.GenderCategoryRepository;
 import com.kopchak.worldoftoys.repository.productcategory.OriginCategoryRepository;
 import com.kopchak.worldoftoys.repository.productcategory.TypeCategoryRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
             var brandCategory = productRepository.findAllBrandsByTypeCategory(typeCategory)
                     .stream()
                     .map(ProductCategoryDto::new)
-                    .collect(Collectors.toSet());;
+                    .collect(Collectors.toSet());
             typeCategoryDtos.add(new TypeCategoryDto(typeCategory.getName(), brandCategory));
         }
         return AllProductCategoriesDto
@@ -65,7 +63,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Set<ProductDto> getAllProducts(){
-        productRepository.findAll().stream().forEach(Product::setSlug);
         return productRepository.findAll().stream().map(ProductDto::new).collect(Collectors.toSet());
+    }
+
+    public ProductDto getProductBySlug(String slug){
+        return new ProductDto(productRepository.findBySlug(slug));
     }
 }
