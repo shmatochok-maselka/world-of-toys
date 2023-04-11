@@ -3,6 +3,7 @@ package com.kopchak.worldoftoys.dto;
 import com.kopchak.worldoftoys.model.Product;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ public class ProductDto {
 
     private String image;
 
-    private Double price;
+    private BigDecimal price;
 
     private ProductCategoryDto originCategory;
 
