@@ -4,7 +4,9 @@ import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
 import com.kopchak.worldoftoys.dto.ProductCategoryDto;
 import com.kopchak.worldoftoys.dto.ProductDto;
 import com.kopchak.worldoftoys.dto.TypeCategoryDto;
+import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.model.Product;
+import com.kopchak.worldoftoys.model.productcategory.ProductCategories;
 import com.kopchak.worldoftoys.model.productcategory.TypeCategory;
 import com.kopchak.worldoftoys.repository.ProductRepository;
 import com.kopchak.worldoftoys.repository.productcategory.AgeCategoryRepository;
@@ -13,6 +15,7 @@ import com.kopchak.worldoftoys.repository.productcategory.OriginCategoryReposito
 import com.kopchak.worldoftoys.repository.productcategory.TypeCategoryRepository;
 import com.kopchak.worldoftoys.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -32,7 +35,8 @@ public class ProductServiceImpl implements ProductService {
     public AllProductCategoriesDto getAllCategories(){
         Double minProductPrice = productRepository.findMinProductPrice();
         Double maxProductPrice = productRepository.findMaxProductPrice();
-        var ageCategories = ageRepository.findAll().stream()
+        var ageCategories = ageRepository.findAll()
+                .stream()
                 .map(ProductCategoryDto::new)
                 .collect(Collectors.toSet());
         var genderCategories = genderRepository.findAll().stream()
@@ -41,15 +45,7 @@ public class ProductServiceImpl implements ProductService {
         var originCategories = originRepository.findAll().stream()
                 .map(ProductCategoryDto::new)
                 .collect(Collectors.toSet());
-        var typeCategories = typeRepository.findAll();
-        Set<TypeCategoryDto> typeCategoryDtos = new HashSet<>();
-        for(TypeCategory typeCategory : typeCategories){
-            var brandCategory = productRepository.findAllBrandsByTypeCategory(typeCategory)
-                    .stream()
-                    .map(ProductCategoryDto::new)
-                    .collect(Collectors.toSet());
-            typeCategoryDtos.add(new TypeCategoryDto(typeCategory.getName(), brandCategory));
-        }
+        Set<TypeCategoryDto> typeCategoriesDto = getTypeCategoriesWithBrands();
         return AllProductCategoriesDto
                 .builder()
                 .minProductPrice(minProductPrice)
@@ -57,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
                 .ageCategories(ageCategories)
                 .genderCategories(genderCategories)
                 .originCategories(originCategories)
-                .typeCategories(typeCategoryDtos)
+                .typeCategories(typeCategoriesDto)
                 .build();
     }
 
@@ -67,6 +63,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductDto getProductBySlug(String slug){
+        Product product = productRepository.findBySlug(slug);
+        if(slug == null || product == null){
+            throw new ProductNotFoundException(HttpStatus.BAD_REQUEST, "Product does not exist!");
+        }
         return new ProductDto(productRepository.findBySlug(slug));
+    }
+
+    private Set<TypeCategoryDto> getTypeCategoriesWithBrands(){
+        return typeRepository.findAll().stream()
+                .map(typeCategory -> {
+                    Set<ProductCategoryDto> brandCategory = productRepository.findAllBrandsByTypeCategory(typeCategory)
+                            .stream()
+                            .map(ProductCategoryDto::new)
+                            .collect(Collectors.toSet());
+                    return new TypeCategoryDto(typeCategory.getName(), brandCategory);
+                })
+                .collect(Collectors.toSet());
     }
 }
