@@ -1,6 +1,14 @@
 USE world_of_toys;
 SET FOREIGN_KEY_CHECKS=0;
 
+TRUNCATE TABLE age_category;
+TRUNCATE TABLE brand_category;
+TRUNCATE TABLE gender_category;
+TRUNCATE TABLE origin_category;
+TRUNCATE TABLE type_category;
+TRUNCATE TABLE product;
+TRUNCATE TABLE product_age_category;
+
 INSERT INTO age_category(id, name)
 VALUES (1, '0-1 роки'),
        (2, '2-3 роки'),
