@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
 import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
-import com.kopchak.worldoftoys.dto.ProductDto;
+import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class ShopController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Set<ProductDto>> getAllProducts() {
+    public ResponseEntity<Set<ProductShopDto>> getAllProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
@@ -28,7 +28,7 @@ public class ShopController {
     }
 
     @GetMapping("/{productSlug}")
-    public ResponseEntity<ProductDto> getProductBySlug(@PathVariable String productSlug) {
+    public ResponseEntity<ProductShopDto> getProductBySlug(@PathVariable String productSlug) {
         return new ResponseEntity<>(productService.getProductBySlug(productSlug), HttpStatus.OK);
     }
 }
