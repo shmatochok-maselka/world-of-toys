@@ -2,7 +2,7 @@ package com.kopchak.worldoftoys.service.impl;
 
 import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
 import com.kopchak.worldoftoys.dto.ProductCategoryDto;
-import com.kopchak.worldoftoys.dto.ProductDto;
+import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.dto.TypeCategoryDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.model.Product;
@@ -55,16 +55,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Set<ProductDto> getAllProducts(){
-        return productRepository.findAll().stream().map(ProductDto::new).collect(Collectors.toSet());
+    public Set<ProductShopDto> getAllProducts(){
+        return productRepository.findAll().stream().map(ProductShopDto::new).collect(Collectors.toSet());
     }
 
-    public ProductDto getProductBySlug(String slug){
+    public ProductShopDto getProductBySlug(String slug){
         Product product = productRepository.findBySlug(slug);
         if(slug == null || product == null){
             throw new ProductNotFoundException(HttpStatus.BAD_REQUEST, "Product does not exist!");
         }
-        return new ProductDto(productRepository.findBySlug(slug));
+        return new ProductShopDto(productRepository.findBySlug(slug));
     }
 
     private Set<TypeCategoryDto> getTypeCategoriesWithBrands(){

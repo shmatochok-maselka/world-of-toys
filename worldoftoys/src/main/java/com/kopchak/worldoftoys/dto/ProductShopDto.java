@@ -12,13 +12,11 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductShopDto {
     private String name;
     private String slug;
     private String description;
-
     private String image;
-
     private BigDecimal price;
 
     private ProductCategoryDto originCategory;
@@ -31,7 +29,7 @@ public class ProductDto {
 
     private Set<ProductCategoryDto> ageCategory;
 
-    public ProductDto(Product product) {
+    public ProductShopDto(Product product) {
         this.name = product.getName();
         this.slug = product.getSlug();
         this.description = product.getDescription();

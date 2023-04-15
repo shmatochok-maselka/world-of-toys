@@ -1,12 +1,12 @@
 package com.kopchak.worldoftoys.service;
 
 import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
-import com.kopchak.worldoftoys.dto.ProductDto;
+import com.kopchak.worldoftoys.dto.ProductShopDto;
 
 import java.util.Set;
 
 public interface ProductService {
     AllProductCategoriesDto getAllCategories();
-    Set<ProductDto> getAllProducts();
-    ProductDto getProductBySlug(String slug);
+    Set<ProductShopDto> getAllProducts();
+    ProductShopDto getProductBySlug(String slug);
 }
