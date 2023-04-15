@@ -5,9 +5,11 @@ import com.kopchak.worldoftoys.dto.PasswordResetDto;
 import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
 import com.kopchak.worldoftoys.exception.NewPasswordMatchesOldException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
+import com.kopchak.worldoftoys.model.Cart;
 import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
 import com.kopchak.worldoftoys.model.token.ConfirmationToken;
 import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.repository.CartRepository;
 import com.kopchak.worldoftoys.repository.ConfirmationTokenRepository;
 import com.kopchak.worldoftoys.repository.UserRepository;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final PasswordEncoder passwordEncoder;
 
     private void saveConfirmationToken(ConfirmationToken token) {
@@ -64,6 +67,9 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         setConfirmedAt(token);
         User user = confirmationToken.getUser();
         user.setEnabled(true);
+        Cart userCart = new Cart();
+        userCart.setUser(user);
+        cartRepository.save(userCart);
         return "Account activated! You can close this link.";
     }
 
