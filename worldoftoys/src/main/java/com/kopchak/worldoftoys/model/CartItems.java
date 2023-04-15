@@ -12,7 +12,9 @@ import lombok.*;
 @Entity
 public class CartItems {
     @EmbeddedId
+    @NonNull
     private CartItemId id;
 
+    @NonNull
     private Integer quantity = 1;
 }
