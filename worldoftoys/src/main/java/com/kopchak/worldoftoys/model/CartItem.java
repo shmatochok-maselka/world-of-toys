@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class CartItems {
+public class CartItem {
     @EmbeddedId
     @NonNull
     private CartItemId id;

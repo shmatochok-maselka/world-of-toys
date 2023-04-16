@@ -1,15 +1,14 @@
 package com.kopchak.worldoftoys.service;
 
 import com.kopchak.worldoftoys.dto.CartItemResponseDTO;
-import com.kopchak.worldoftoys.dto.ProductCartDto;
-import com.kopchak.worldoftoys.dto.ProductShopDto;
+import com.kopchak.worldoftoys.dto.CartItemRequestDTO;
 
 import java.security.Principal;
 import java.util.Set;
 
 public interface CartService {
-    void addProductToCart(ProductCartDto productCartDto, Principal principal);
+    void addProductToCart(CartItemRequestDTO cartItemRequestDTO, Principal principal);
     Set<CartItemResponseDTO> getCartProducts(Principal principal);
-    void updateCartItemQuantity(ProductCartDto productCartDto, Principal principal);
-    void removeProductFromCart(ProductCartDto productCartDto, Principal principal);
+    void updateCartItemQuantity(CartItemRequestDTO cartItemRequestDTO, Principal principal);
+    void removeProductFromCart(CartItemRequestDTO cartItemRequestDTO, Principal principal);
 }

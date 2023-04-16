@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCartDto {
+public class CartItemRequestDTO {
     @NotBlank(message = "Slug is mandatory")
     @Size(min = 3, max = 80, message = "Slug must be up to 80 characters long")
     private String slug;

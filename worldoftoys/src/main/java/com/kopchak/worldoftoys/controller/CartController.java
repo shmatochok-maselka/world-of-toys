@@ -1,8 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
 import com.kopchak.worldoftoys.dto.CartItemResponseDTO;
-import com.kopchak.worldoftoys.dto.ProductCartDto;
-import com.kopchak.worldoftoys.dto.ProductShopDto;
+import com.kopchak.worldoftoys.dto.CartItemRequestDTO;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.CartService;
@@ -42,10 +41,10 @@ public class CartController {
     @PostMapping(value = "/add-product")
     public ResponseEntity<?> addProductToCart(
              @Valid @Schema(description = "The slug of the product to be added to the cart",
-                     implementation = ProductCartDto.class) @RequestBody ProductCartDto productCartDto,
+                     implementation = CartItemRequestDTO.class) @RequestBody CartItemRequestDTO cartItemRequestDTO,
              @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                      example = "Bearer access_token") Principal principal) {
-        cartService.addProductToCart(productCartDto, principal);
+        cartService.addProductToCart(cartItemRequestDTO, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -55,14 +54,14 @@ public class CartController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateCartItemQuantity(@RequestBody ProductCartDto productCartDto, Principal principal) {
-        cartService.updateCartItemQuantity(productCartDto, principal);
+    public ResponseEntity<?> updateCartItemQuantity(@RequestBody CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        cartService.updateCartItemQuantity(cartItemRequestDTO, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> removeProductFromCart(@RequestBody ProductCartDto productCartDto, Principal principal) {
-        cartService.removeProductFromCart(productCartDto, principal);
+    public ResponseEntity<?> removeProductFromCart(@RequestBody CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        cartService.removeProductFromCart(cartItemRequestDTO, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
