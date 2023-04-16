@@ -30,13 +30,10 @@ public class CartServiceImpl implements CartService {
     public void addProductToCart(ProductCartDto productCartDto, Principal principal){
         String username = principal.getName();
         User user = userRepository.findByEmail(username).orElseThrow(() ->
-            new UserNotFoundException(HttpStatus.BAD_REQUEST, "User does not exist!"));
-//        if(!user.getEnabled()){
-//            throw new Ac
-//        }
+            new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
         Product product = productRepository.findBySlug(productCartDto.getSlug());
         if(productCartDto.getSlug() == null || product == null){
-            throw new ProductNotFoundException(HttpStatus.BAD_REQUEST, "Product does not exist!");
+            throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
         }
         CartItems cartItem = new CartItems();
         cartItem.setId(new CartItemId(user, product));
