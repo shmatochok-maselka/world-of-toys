@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
 import com.kopchak.worldoftoys.dto.ProductCartDto;
+import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.CartService;
@@ -16,12 +17,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(value = {"http://localhost:4200", "http://localhost:8080"})
@@ -42,10 +41,15 @@ public class CartController {
     @PostMapping(value = "/add-product")
     public ResponseEntity<?> addProductToCart(
              @Valid @Schema(description = "The slug of the product to be added to the cart",
-                     implementation = ProductCartDto.class) ProductCartDto productCartDto,
+                     implementation = ProductCartDto.class) @RequestBody ProductCartDto productCartDto,
              @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                      example = "Bearer access_token") Principal principal) {
         cartService.addProductToCart(productCartDto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Set<ProductShopDto>> getCartProducts(Principal principal) {
+        return new ResponseEntity<>(cartService.getCartProducts(principal), HttpStatus.OK);
     }
 }

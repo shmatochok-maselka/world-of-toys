@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.service.impl;
 
 import com.kopchak.worldoftoys.dto.ProductCartDto;
+import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.CartItemId;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,5 +41,16 @@ public class CartServiceImpl implements CartService {
         CartItems cartItem = new CartItems();
         cartItem.setId(new CartItemId(user, product));
         cartItemsRepository.save(cartItem);
+    }
+
+    @Override
+    public Set<ProductShopDto> getCartProducts(Principal principal){
+        String username = principal.getName();
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+        Set<Product> products = cartItemsRepository.findAllProductsByUserId(user.getId());
+        return products.stream()
+                .map(ProductShopDto::new)
+                .collect(Collectors.toSet());
     }
 }
