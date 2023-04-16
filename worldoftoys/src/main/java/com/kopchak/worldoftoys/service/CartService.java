@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface CartService {
     void addProductToCart(ProductCartDto productCartDto, Principal principal);
-//    Set<ProductShopDto> getCartProducts(Principal principal);
     Set<CartItemResponseDTO> getCartProducts(Principal principal);
     void updateCartItemQuantity(ProductCartDto productCartDto, Principal principal);
+    void removeProductFromCart(ProductCartDto productCartDto, Principal principal);
 }

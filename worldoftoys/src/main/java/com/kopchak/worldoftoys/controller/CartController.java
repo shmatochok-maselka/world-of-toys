@@ -59,4 +59,10 @@ public class CartController {
         cartService.updateCartItemQuantity(productCartDto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping()
+    public ResponseEntity<?> removeProductFromCart(@RequestBody ProductCartDto productCartDto, Principal principal) {
+        cartService.removeProductFromCart(productCartDto, principal);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

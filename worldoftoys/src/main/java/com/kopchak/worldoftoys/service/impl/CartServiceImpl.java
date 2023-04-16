@@ -45,15 +45,6 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-//    public Set<ProductShopDto> getCartProducts(Principal principal){
-//        String username = principal.getName();
-//        User user = userRepository.findByEmail(username).orElseThrow(() ->
-//                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
-//        Set<Product> products = cartItemsRepository.findAllProductsByUserId(user.getId());
-//        return products.stream()
-//                .map(ProductShopDto::new)
-//                .collect(Collectors.toSet());
-//    }
     public Set<CartItemResponseDTO> getCartProducts(Principal principal){
         String username = principal.getName();
         User user = userRepository.findByEmail(username).orElseThrow(() ->
@@ -73,5 +64,17 @@ public class CartServiceImpl implements CartService {
         CartItems cartItem = cartItemsRepository.findById(new CartItemId(user, product)).orElseThrow(() ->
             new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!"));
         cartItemsRepository.updateCartItemQuantity(cartItem.getId(), productCartDto.getQuantity());
+    }
+
+    @Override
+    public void removeProductFromCart(ProductCartDto productCartDto, Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+        Product product = productRepository.findBySlug(productCartDto.getSlug());
+        if(productCartDto.getSlug() == null || product == null){
+            throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
+        }
+        cartItemsRepository.deleteCartItemsById(new CartItemId(user, product));
     }
 }
