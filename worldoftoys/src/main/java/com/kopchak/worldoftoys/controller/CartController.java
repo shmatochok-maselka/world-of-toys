@@ -35,15 +35,15 @@ public class CartController {
             @ApiResponse(responseCode = "401", description = "Access denied because user is unauthorized"),
             @ApiResponse(responseCode = "404", description = "User or product not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                           UserNotFoundException.class, ProductNotFoundException.class })))
+                            UserNotFoundException.class, ProductNotFoundException.class})))
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = "/add-product")
     public ResponseEntity<?> addProductToCart(
-             @Valid @Schema(description = "The slug of the product to be added to the cart",
-                     implementation = CartItemRequestDTO.class) @RequestBody CartItemRequestDTO cartItemRequestDTO,
-             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
-                     example = "Bearer access_token") Principal principal) {
+            @Valid @Schema(description = "The slug of the product to be added to the cart",
+                    implementation = CartItemRequestDTO.class) @RequestBody CartItemRequestDTO cartItemRequestDTO,
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                    example = "Bearer access_token") Principal principal) {
         cartService.addProductToCart(cartItemRequestDTO, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

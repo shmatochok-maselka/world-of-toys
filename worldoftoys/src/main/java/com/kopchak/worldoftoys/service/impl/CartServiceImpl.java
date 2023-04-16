@@ -29,50 +29,44 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public void addProductToCart(CartItemRequestDTO cartItemRequestDTO, Principal principal){
-        String username = principal.getName();
-        User user = userRepository.findByEmail(username).orElseThrow(() ->
-            new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
-        Product product = productRepository.findBySlug(cartItemRequestDTO.getSlug());
-        if(cartItemRequestDTO.getSlug() == null || product == null){
-            throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
-        }
+    public void addProductToCart(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        CartItemId cartItemId = getCartItemId(cartItemRequestDTO, principal);
         CartItem cartItem = new CartItem();
-        cartItem.setId(new CartItemId(user, product));
+        cartItem.setId(cartItemId);
         cartItemsRepository.save(cartItem);
     }
 
     @Override
-    public Set<CartItemResponseDTO> getCartProducts(Principal principal){
-        String username = principal.getName();
-        User user = userRepository.findByEmail(username).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+    public Set<CartItemResponseDTO> getCartProducts(Principal principal) {
+        User user = getUserByPrincipal(principal);
         return cartItemsRepository.findAllProductsByUserId(user.getId());
     }
 
     @Override
-    public void updateCartItemQuantity(CartItemRequestDTO cartItemRequestDTO, Principal principal){
-        String username = principal.getName();
-        User user = userRepository.findByEmail(username).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
-        Product product = productRepository.findBySlug(cartItemRequestDTO.getSlug());
-        if(cartItemRequestDTO.getSlug() == null || product == null){
-            throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
-        }
-        CartItem cartItem = cartItemsRepository.findById(new CartItemId(user, product)).orElseThrow(() ->
-            new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!"));
+    public void updateCartItemQuantity(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        CartItemId cartItemId = getCartItemId(cartItemRequestDTO, principal);
+        CartItem cartItem = cartItemsRepository.findById(cartItemId).orElseThrow(() ->
+                new ProductNotFoundException(HttpStatus.NOT_FOUND, "There is no such product in the cart"));
         cartItemsRepository.updateCartItemQuantity(cartItem.getId(), cartItemRequestDTO.getQuantity());
     }
 
     @Override
     public void removeProductFromCart(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        cartItemsRepository.deleteCartItemsById(getCartItemId(cartItemRequestDTO, principal));
+    }
+
+    private User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
-        User user = userRepository.findByEmail(username).orElseThrow(() ->
+        return userRepository.findByEmail(username).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+    }
+
+    private CartItemId getCartItemId(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+        User user = getUserByPrincipal(principal);
         Product product = productRepository.findBySlug(cartItemRequestDTO.getSlug());
-        if(cartItemRequestDTO.getSlug() == null || product == null){
+        if (cartItemRequestDTO.getSlug() == null || product == null) {
             throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
         }
-        cartItemsRepository.deleteCartItemsById(new CartItemId(user, product));
+        return new CartItemId(user, product);
     }
 }
