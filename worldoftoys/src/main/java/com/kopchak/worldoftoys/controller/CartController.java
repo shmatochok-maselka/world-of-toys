@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.controller;
 
+import com.kopchak.worldoftoys.dto.CartItemResponseDTO;
 import com.kopchak.worldoftoys.dto.ProductCartDto;
 import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
@@ -49,7 +50,13 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<ProductShopDto>> getCartProducts(Principal principal) {
+    public ResponseEntity<Set<CartItemResponseDTO>> getCartProducts(Principal principal) {
         return new ResponseEntity<>(cartService.getCartProducts(principal), HttpStatus.OK);
+    }
+
+    @PutMapping()
+    public ResponseEntity<?> updateCartItemQuantity(@RequestBody ProductCartDto productCartDto, Principal principal) {
+        cartService.updateCartItemQuantity(productCartDto, principal);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

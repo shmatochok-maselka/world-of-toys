@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.service.impl;
 
+import com.kopchak.worldoftoys.dto.CartItemResponseDTO;
 import com.kopchak.worldoftoys.dto.ProductCartDto;
 import com.kopchak.worldoftoys.dto.ProductShopDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
@@ -44,13 +45,33 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Set<ProductShopDto> getCartProducts(Principal principal){
+//    public Set<ProductShopDto> getCartProducts(Principal principal){
+//        String username = principal.getName();
+//        User user = userRepository.findByEmail(username).orElseThrow(() ->
+//                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+//        Set<Product> products = cartItemsRepository.findAllProductsByUserId(user.getId());
+//        return products.stream()
+//                .map(ProductShopDto::new)
+//                .collect(Collectors.toSet());
+//    }
+    public Set<CartItemResponseDTO> getCartProducts(Principal principal){
         String username = principal.getName();
         User user = userRepository.findByEmail(username).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
-        Set<Product> products = cartItemsRepository.findAllProductsByUserId(user.getId());
-        return products.stream()
-                .map(ProductShopDto::new)
-                .collect(Collectors.toSet());
+        return cartItemsRepository.findAllProductsByUserId(user.getId());
+    }
+
+    @Override
+    public void updateCartItemQuantity(ProductCartDto productCartDto, Principal principal){
+        String username = principal.getName();
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+        Product product = productRepository.findBySlug(productCartDto.getSlug());
+        if(productCartDto.getSlug() == null || product == null){
+            throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
+        }
+        CartItems cartItem = cartItemsRepository.findById(new CartItemId(user, product)).orElseThrow(() ->
+            new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!"));
+        cartItemsRepository.updateCartItemQuantity(cartItem.getId(), productCartDto.getQuantity());
     }
 }
