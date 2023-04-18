@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemResponseDTO {
+public class CartItemResponseDto {
     private String name;
     private String slug;
     private String image;

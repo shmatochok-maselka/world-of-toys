@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.CartItemResponseDTO;
-import com.kopchak.worldoftoys.dto.CartItemRequestDTO;
+import com.kopchak.worldoftoys.dto.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.CartItemResponseDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.CartItemId;
@@ -29,30 +29,30 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public void addProductToCart(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
-        CartItemId cartItemId = getCartItemId(cartItemRequestDTO, principal);
+    public void addProductToCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
+        CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
         CartItem cartItem = new CartItem();
         cartItem.setId(cartItemId);
         cartItemsRepository.save(cartItem);
     }
 
     @Override
-    public Set<CartItemResponseDTO> getCartProducts(Principal principal) {
+    public Set<CartItemResponseDto> getCartProducts(Principal principal) {
         User user = getUserByPrincipal(principal);
         return cartItemsRepository.findAllProductsByUserId(user.getId());
     }
 
     @Override
-    public void updateCartItemQuantity(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
-        CartItemId cartItemId = getCartItemId(cartItemRequestDTO, principal);
+    public void updateCartItemQuantity(CartItemRequestDto cartItemRequestDto, Principal principal) {
+        CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
         CartItem cartItem = cartItemsRepository.findById(cartItemId).orElseThrow(() ->
                 new ProductNotFoundException(HttpStatus.NOT_FOUND, "There is no such product in the cart"));
-        cartItemsRepository.updateCartItemQuantity(cartItem.getId(), cartItemRequestDTO.getQuantity());
+        cartItemsRepository.updateCartItemQuantity(cartItem.getId(), cartItemRequestDto.getQuantity());
     }
 
     @Override
-    public void removeProductFromCart(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
-        cartItemsRepository.deleteCartItemsById(getCartItemId(cartItemRequestDTO, principal));
+    public void removeProductFromCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
+        cartItemsRepository.deleteCartItemsById(getCartItemId(cartItemRequestDto, principal));
     }
 
     private User getUserByPrincipal(Principal principal) {
@@ -61,10 +61,10 @@ public class CartServiceImpl implements CartService {
                 new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
     }
 
-    private CartItemId getCartItemId(CartItemRequestDTO cartItemRequestDTO, Principal principal) {
+    private CartItemId getCartItemId(CartItemRequestDto cartItemRequestDto, Principal principal) {
         User user = getUserByPrincipal(principal);
-        Product product = productRepository.findBySlug(cartItemRequestDTO.getSlug());
-        if (cartItemRequestDTO.getSlug() == null || product == null) {
+        Product product = productRepository.findBySlug(cartItemRequestDto.getSlug());
+        if (cartItemRequestDto.getSlug() == null || product == null) {
             throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
         }
         return new CartItemId(user, product);
