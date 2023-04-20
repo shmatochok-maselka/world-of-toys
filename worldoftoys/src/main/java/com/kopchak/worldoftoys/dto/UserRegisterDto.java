@@ -13,11 +13,11 @@ import lombok.*;
 @NoArgsConstructor
 public class UserRegisterDto {
     @NotBlank(message = "Firstname is mandatory")
-    @Size(max = 60, message = "Firstname must be up to 60 characters long")
+    @Size(min = 3, max = 60, message = "Firstname must be up to 60 characters long")
     private String firstname;
 
     @NotBlank(message = "Lastname is mandatory")
-    @Size(max = 60, message = "Lastname must be up to 60 characters long")
+    @Size(min = 3, max = 60, message = "Lastname must be up to 60 characters long")
     private String lastname;
     @Email
     @NotBlank(message = "Email is mandatory")

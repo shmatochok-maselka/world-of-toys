@@ -33,8 +33,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     public ConfirmTokenDto createConfirmToken(String username, ConfirmTokenType tokenType) {
-        var user = userRepository.findByEmail(username).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+        var user = findUserByEmail(username);
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(token, tokenType, user,
                 LocalDateTime.now(), LocalDateTime.now().plusMinutes(15));
@@ -43,8 +42,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     public boolean isValidActivationTokenExists(String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+        var user = findUserByEmail(email);
         var confirmTokensList = confirmationTokenRepository
                 .findAllByUserId(user.getId())
                 .stream()
@@ -64,6 +62,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         ConfirmationToken confirmationToken = getToken(token);
         setConfirmedAt(token);
         User user = confirmationToken.getUser();
+        findUserByEmail(user.getEmail());
         user.setEnabled(true);
         return "Account activated! You can close this link.";
     }
@@ -74,8 +73,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         ConfirmationToken confirmationToken = getToken(token);
         setConfirmedAt(token);
         String email = confirmationToken.getUser().getEmail();
-        var user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
+        var user = findUserByEmail(email);
         if(passwordEncoder.matches(newPassword.getPassword(), user.getPassword())){
             throw new NewPasswordMatchesOldException(HttpStatus.BAD_REQUEST, "New password matches old password!");
         }
@@ -90,5 +88,10 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private void setConfirmedAt(String token) {
         confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+    }
+
+    private User findUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.BAD_REQUEST, "Username does not exist!"));
     }
 }
