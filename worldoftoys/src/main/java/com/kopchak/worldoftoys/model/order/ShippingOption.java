@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Shipping {
+public class ShippingOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -45,7 +45,7 @@ public class Order {
     @ManyToOne
     @NonNull
     @JoinColumn(name = "shipping_id")
-    private Shipping shipping;
+    private ShippingOption shippingOption;
 
     @ManyToOne
     @NonNull
