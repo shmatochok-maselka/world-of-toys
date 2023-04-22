@@ -9,5 +9,5 @@ import java.util.Set;
 public interface OrderService {
     Set<ShippingOptionDto> getAllShippingOptions();
 
-    void createOrder(OrderDto orderDto, Principal principal);
+    void makeOrder(OrderDto orderDto, Principal principal);
 }

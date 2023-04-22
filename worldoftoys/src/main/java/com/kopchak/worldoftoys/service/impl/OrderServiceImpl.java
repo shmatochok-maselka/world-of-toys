@@ -41,21 +41,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void createOrder(OrderDto orderDto, Principal principal) {
+    public void makeOrder(OrderDto orderDto, Principal principal) {
         String email = principal.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.NOT_FOUND, "User does not exist!"));
+                new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found!"));
         Recipient recipient = recipientRepository.save(orderDto.getRecipientDto().toRecipient());
         Address address = addressRepository.save(orderDto.getAddressDto().toAddress());
         var shippingOptionDto = orderDto.getShippingOptionDto();
         ShippingOption shippingOption = shippingRepository.findByTypeAndMethod(
                 shippingOptionDto.getShippingType(), shippingOptionDto.getShippingMethod());
+        BigDecimal totalPrice = calcTotalOrderPrice(user, shippingOption);
+        Order order = createOrder(user, recipient, shippingOption, address, totalPrice);
+        transferCartItemsToOrder(user, order);
+    }
+
+    private BigDecimal calcTotalOrderPrice(User user, ShippingOption shippingOption) {
         var cartProducts = cartItemsRepository.findAllProductsByUserId(user.getId());
         BigDecimal totalPriceOfProducts = cartProducts
                 .stream()
                 .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal totalPrice = totalPriceOfProducts.add(shippingOption.getPrice());
+        return totalPriceOfProducts.add(shippingOption.getPrice());
+    }
+
+    private Order createOrder(User user, Recipient recipient,
+                              ShippingOption shippingOption, Address address, BigDecimal totalPrice) {
         Order order = Order
                 .builder()
                 .orderDateTime(LocalDateTime.now())
@@ -66,16 +76,20 @@ public class OrderServiceImpl implements OrderService {
                 .shippingOption(shippingOption)
                 .address(address)
                 .build();
-        Order newOrder = orderRepository.save(order);
+        return orderRepository.save(order);
+    }
+
+    @Transactional
+    private void transferCartItemsToOrder(User user, Order order) {
         var cartItems = cartItemsRepository.findAllCartItemsByUserId(user.getId());
         Set<OrderItem> orderItems = cartItems
                 .stream()
                 .map(cartItem ->
-                    OrderItem.
-                            builder()
-                            .id(new OrderItemId(newOrder, cartItem.getId().getProduct()))
-                            .quantity(cartItem.getQuantity())
-                            .build()
+                        OrderItem.
+                                builder()
+                                .id(new OrderItemId(order, cartItem.getId().getProduct()))
+                                .quantity(cartItem.getQuantity())
+                                .build()
                 ).collect(Collectors.toSet());
         orderItemRepository.saveAll(orderItems);
         cartItemsRepository.deleteCartItemsByUserId(user.getId());
