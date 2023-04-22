@@ -1,4 +1,4 @@
-package com.kopchak.worldoftoys.dto;
+package com.kopchak.worldoftoys.dto.order;
 
 import com.kopchak.worldoftoys.model.order.ShippingMethod;
 import com.kopchak.worldoftoys.model.order.ShippingOption;
