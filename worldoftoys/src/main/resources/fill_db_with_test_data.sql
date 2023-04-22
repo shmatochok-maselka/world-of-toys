@@ -8,6 +8,7 @@ TRUNCATE TABLE origin_category;
 TRUNCATE TABLE type_category;
 TRUNCATE TABLE product;
 TRUNCATE TABLE product_age_category;
+TRUNCATE TABLE blog_post;
 
 INSERT INTO age_category(id, name)
 VALUES (1, '0-1 роки'),
@@ -243,3 +244,55 @@ VALUES (1, 2),
        (29, 2),
        (30, 2),
        (30, 3);
+
+INSERT INTO blog_post(id, title, slug, image, content)
+VALUES (1, '10 найпопулярніших іграшок 2023 року', '10-naypopulyarnishykh-ihrashok-2023-roku', 'https://karapuzov.com.ua/image/catalog/blog/2020-November/razvivajuschie-igrushki/razvivayuschie-igrushki-dlya-malyshey-blog-karapuzov.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (2, 'Як вибрати іграшку відповідно до віку вашої дитини', 'yak-vybraty-ihrashku-vidpovidno-do-viku-vashoyi-dytyny', 'https://t1.ua/photos/articles/2019/11/35795_1_1097.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (3, 'Історія найпопулярнішої іграшки в світі', 'istoriya-naypopulyarnishoyi-ihrashky-v-sviti','https://www.iphones.ru/wp-content/uploads/2018/08/lego_best_hobby-14.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (4, 'Як іграшки впливають на розвиток дитини', 'yak-ihrashky-vplyvayut-na-rozvytok-dytyny','https://zhzh.info/_pu/127/72415546.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (5, '5 ігрових ідей для активного відпочинку з дітьми', '5-ihrovykh-idey-dlya-aktyvnoho-vidpochynku-z-ditmy','https://img.tsn.ua/cached/213/tsn-044a03ab1c6615c0753d2de60e24b711/thumbs/1200x630/a3/e8/af41912fcca6928330d037904237e8a3.jpeg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (6, 'Новинки іграшок у 2023 році', 'novynky-ihrashok-u-2023-rotsi','https://tsikavi-fakty.com.ua/wp-content/uploads/2020/02/6f2aacf7d87b674d21b29614559e7f39.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (7, '5 іграшок, які допоможуть розвинути творчість та уяву дитини','5-ihrashok-yaki-dopomozhut-rozvynuty-tvorchist-ta-uyavu-dytyny', 'https://vikna.if.ua/assets/gallery/2019/11/12/104062/44412458__large.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (8, 'Іграшки для вивчення іноземної мови', 'ihrashky-dlya-vyvchennya-inozemnoyi-movy','https://arhpress.ru/uploads/posts/2018-11/1541022564_7843.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (9, 'Як створювати розвивальні ігри для дітей вдома', 'yak-stvoryuvaty-rozvyvalni-ihry-dlya-ditey-vdoma','https://smarttoys.com.ua/upload/iblock/07c/Igrashki-dlya-khlopchikiv.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.'),
+       (10, 'Найбільш креативні іграшки для розвитку логіки у дітей', 'naybilsh-kreatyvni-ihrashky-dlya-rozvytku-lohiky-u-ditey','https://www.hitfm.ua/static/img/content/info/7/32/1200x630.jpg',
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum in, asperiores. Mollitia voluptate, fuga facilis quod, quidem iure blanditiis soluta veniam nobis praesentium ex quo ut officiis consequuntur sapiente nisi
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
+Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.');
