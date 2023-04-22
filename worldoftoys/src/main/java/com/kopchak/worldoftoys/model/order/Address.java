@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -38,4 +40,8 @@ public class Address {
 
     @Min(value = 1, message = "Flat number must be greater than or equal to 1")
     private Integer flatNumber;
+
+    @OneToMany
+    @JoinColumn(name = "address_id")
+    private Set<Order> orders;
 }

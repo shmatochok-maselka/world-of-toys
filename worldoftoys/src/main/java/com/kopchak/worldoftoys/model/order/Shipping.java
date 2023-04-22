@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,4 +28,8 @@ public class Shipping {
 
     @NotBlank(message = "Price is mandatory")
     private BigDecimal price;
+
+    @OneToMany
+    @JoinColumn(name = "shipping_id")
+    private Set<Order> orders;
 }

@@ -40,5 +40,15 @@ public class Order {
     @OneToOne
     @NonNull
     @JoinColumn(name = "recipient_id")
-    private OrderRecipient orderRecipient;
+    private Recipient recipient;
+
+    @ManyToOne
+    @NonNull
+    @JoinColumn(name = "shipping_id")
+    private Shipping shipping;
+
+    @ManyToOne
+    @NonNull
+    @JoinColumn(name = "address_id")
+    private Address address;
 }
