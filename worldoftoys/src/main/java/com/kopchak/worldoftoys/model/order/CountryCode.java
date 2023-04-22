@@ -1,8 +1,7 @@
 package com.kopchak.worldoftoys.model.order;
 
 public enum CountryCode {
-    UA("380"),
-    PL("48");
+    UA("380");
     private final String countryCode;
 
     private CountryCode(String countryCode) {
