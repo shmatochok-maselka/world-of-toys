@@ -29,7 +29,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @NotBlank(message = "Total price is mandatory")
+    @NonNull
     private BigDecimal totalPrice;
 
     @ManyToOne
