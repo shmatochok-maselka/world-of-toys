@@ -20,11 +20,11 @@ public class ShippingOption {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private ShippingType shippingType;
+    private ShippingType type;
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private ShippingMethod shippingMethod;
+    private ShippingMethod method;
 
     @NotBlank(message = "Price is mandatory")
     private BigDecimal price;

@@ -298,7 +298,7 @@ Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferend
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
 Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.');
 
-INSERT INTO shipping_option(id, shipping_method, shipping_type, price)
+INSERT INTO shipping_option(id, method, type, price)
 VALUES (1, 'COURIER', 'STANDARD', 100),
     (2, 'COURIER', 'EXPRESS', 150),
     (3, 'POSTAL_SERVICE', 'STANDARD', 50),

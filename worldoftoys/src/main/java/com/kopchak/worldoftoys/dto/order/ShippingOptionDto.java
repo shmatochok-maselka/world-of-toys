@@ -20,8 +20,8 @@ public class ShippingOptionDto {
     private BigDecimal price;
 
     public ShippingOptionDto(ShippingOption shippingOption) {
-        this.shippingType = shippingOption.getShippingType();
-        this.shippingMethod = shippingOption.getShippingMethod();
+        this.shippingType = shippingOption.getType();
+        this.shippingMethod = shippingOption.getMethod();
         this.price = shippingOption.getPrice();
     }
 }
