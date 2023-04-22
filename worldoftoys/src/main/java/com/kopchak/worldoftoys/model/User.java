@@ -1,5 +1,6 @@
 package com.kopchak.worldoftoys.model;
 
+import com.kopchak.worldoftoys.model.order.Order;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
 import com.kopchak.worldoftoys.model.token.ConfirmationToken;
 import jakarta.persistence.*;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -61,6 +63,10 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private List<ConfirmationToken> confirmationTokens;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
