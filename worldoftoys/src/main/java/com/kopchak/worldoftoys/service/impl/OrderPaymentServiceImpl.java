@@ -1,28 +1,51 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.order.OrderDto;
+import com.kopchak.worldoftoys.dto.order.OrderCreationDto;
+import com.kopchak.worldoftoys.dto.order.OrderDetailsDto;
+import com.kopchak.worldoftoys.dto.order.PaymentCreationDto;
 import com.kopchak.worldoftoys.dto.order.ShippingOptionDto;
+import com.kopchak.worldoftoys.exception.PaymentFailedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.User;
 import com.kopchak.worldoftoys.model.order.*;
+import com.kopchak.worldoftoys.model.payment.Payment;
+import com.kopchak.worldoftoys.model.payment.PaymentCurrency;
 import com.kopchak.worldoftoys.repository.CartItemsRepository;
+import com.kopchak.worldoftoys.repository.PaymentRepository;
 import com.kopchak.worldoftoys.repository.UserRepository;
 import com.kopchak.worldoftoys.repository.order.*;
-import com.kopchak.worldoftoys.service.OrderService;
+import com.kopchak.worldoftoys.service.OrderPaymentService;
+import com.stripe.Stripe;
+import com.stripe.exception.*;
+import com.stripe.model.Charge;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class OrderServiceImpl implements OrderService {
+@RequiredArgsConstructor
+public class OrderPaymentServiceImpl implements OrderPaymentService {
+    @Value("${stripe.public.key}")
+    private String stripePublicKey;
+    @Value("${stripe.secret.key}")
+    private String stripeSecretKey;
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = stripeSecretKey;
+    }
+
     private final ShippingRepository shippingRepository;
     private final UserRepository userRepository;
     private final RecipientRepository recipientRepository;
@@ -30,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemsRepository cartItemsRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public Set<ShippingOptionDto> getAllShippingOptions() {
@@ -41,18 +65,45 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void makeOrder(OrderDto orderDto, Principal principal) {
+    public OrderDetailsDto makeOrder(OrderCreationDto orderCreationDto, Principal principal) {
         String email = principal.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found!"));
-        Recipient recipient = recipientRepository.save(orderDto.getRecipientDto().toRecipient());
-        Address address = addressRepository.save(orderDto.getAddressDto().toAddress());
-        var shippingOptionDto = orderDto.getShippingOptionDto();
+        Recipient recipient = recipientRepository.save(orderCreationDto.getRecipientDto().toRecipient());
+        Address address = addressRepository.save(orderCreationDto.getAddressDto().toAddress());
+        var shippingOptionDto = orderCreationDto.getShippingOptionDto();
         ShippingOption shippingOption = shippingRepository.findByTypeAndMethod(
                 shippingOptionDto.getShippingType(), shippingOptionDto.getShippingMethod());
         BigDecimal totalPrice = calcTotalOrderPrice(user, shippingOption);
         Order order = createOrder(user, recipient, shippingOption, address, totalPrice);
         transferCartItemsToOrder(user, order);
+        return new OrderDetailsDto(user.getUsername(), order.getDateTime(), order.getTotalPrice(), stripePublicKey);
+    }
+
+    @Override
+    public void makeShippingPayment(PaymentCreationDto paymentCreationDto) {
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("amount", paymentCreationDto.getTotalPrice());
+        chargeParams.put("currency", PaymentCurrency.UAH);
+        chargeParams.put("description", "Payment for toys in the online store \"World of toys\"");
+        chargeParams.put("source", paymentCreationDto.getStripeToken());
+        try {
+            Charge charge = Charge.create(chargeParams);
+            Payment payment = Payment
+                    .builder()
+                    .id(charge.getId())
+                    .amount(paymentCreationDto.getTotalPrice())
+                    .currency(PaymentCurrency.UAH)
+                    .description(charge.getDescription())
+                    .source(charge.getSource().getId())
+                    .build();
+            paymentRepository.save(payment);
+            orderRepository.updateOrderStatus(paymentCreationDto.getOrderDateTime(), paymentCreationDto.getUsername(),
+                    OrderStatus.PROCESSING);
+        } catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException
+                 | APIException e) {
+            throw new PaymentFailedException(HttpStatus.PAYMENT_REQUIRED, "Payment failed: " + e.getMessage());
+        }
     }
 
     private BigDecimal calcTotalOrderPrice(User user, ShippingOption shippingOption) {
@@ -68,8 +119,8 @@ public class OrderServiceImpl implements OrderService {
                               ShippingOption shippingOption, Address address, BigDecimal totalPrice) {
         Order order = Order
                 .builder()
-                .orderDateTime(LocalDateTime.now())
-                .orderStatus(OrderStatus.NEW)
+                .dateTime(LocalDateTime.now())
+                .status(OrderStatus.NEW)
                 .totalPrice(totalPrice)
                 .user(user)
                 .recipient(recipient)
