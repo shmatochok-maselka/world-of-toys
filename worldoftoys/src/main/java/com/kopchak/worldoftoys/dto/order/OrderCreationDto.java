@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class OrderCreationDto {
     private RecipientDto recipientDto;
     private AddressDto addressDto;
     private ShippingOptionDto shippingOptionDto;

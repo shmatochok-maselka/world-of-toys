@@ -13,10 +13,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShippingOptionDto {
+    @NonNull
     private ShippingType shippingType;
 
+    @NonNull
     private ShippingMethod shippingMethod;
 
+    @NonNull
     private BigDecimal price;
 
     public ShippingOptionDto(ShippingOption shippingOption) {

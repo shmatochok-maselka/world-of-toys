@@ -25,9 +25,14 @@ public class Address {
     private String country;
 
     @Column(length = 100)
-    @NotBlank(message = "Country is mandatory")
-    @Size(max = 100, message = "Country must be up to 100 characters long")
-    private String city;
+    @NotBlank(message = "Region is mandatory")
+    @Size(max = 100, message = "Region must be up to 100 characters long")
+    private String region;
+
+    @Column(length = 100)
+    @NotBlank(message = "Settlement is mandatory")
+    @Size(max = 100, message = "Settlement must be up to 100 characters long")
+    private String settlement;
 
     @Column(length = 100)
     @NotBlank(message = "Street is mandatory")

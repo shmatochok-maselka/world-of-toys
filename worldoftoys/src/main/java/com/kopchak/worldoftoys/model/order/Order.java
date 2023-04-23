@@ -2,7 +2,6 @@ package com.kopchak.worldoftoys.model.order;
 
 import com.kopchak.worldoftoys.model.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.lang.NonNull;
 
@@ -23,11 +22,11 @@ public class Order {
 
     @Column(nullable = false)
     @NonNull
-    private LocalDateTime orderDateTime;
+    private LocalDateTime dateTime;
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     @NonNull
     private BigDecimal totalPrice;
