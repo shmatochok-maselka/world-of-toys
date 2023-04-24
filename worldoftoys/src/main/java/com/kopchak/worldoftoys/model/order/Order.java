@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.model.order;
 
 import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.payment.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.NonNull;
@@ -50,4 +51,8 @@ public class Order {
     @NonNull
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 }
