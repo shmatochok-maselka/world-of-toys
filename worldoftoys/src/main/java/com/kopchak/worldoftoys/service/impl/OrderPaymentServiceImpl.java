@@ -137,6 +137,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
                         .dateTime(order.getDateTime())
                         .status(order.getStatus())
                         .totalPrice(order.getTotalPrice())
+                        .shippingOption(new ShippingOptionDto(order.getShippingOption()))
                         .products(convertOrderItemToCartItemDtoSet(
                                 orderItemRepository.searchAllByOrderId(order.getId())))
                         .build())

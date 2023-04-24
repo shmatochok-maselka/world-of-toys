@@ -17,5 +17,6 @@ public class UserOrderDto {
     private LocalDateTime dateTime;
     private OrderStatus status;
     private BigDecimal totalPrice;
+    private ShippingOptionDto shippingOption;
     Set<CartItemResponseDto> products;
 }
