@@ -33,6 +33,7 @@ public class CartServiceImpl implements CartService {
         CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
         CartItem cartItem = new CartItem();
         cartItem.setId(cartItemId);
+        cartItem.setQuantity(cartItemRequestDto.getQuantity());
         cartItemsRepository.save(cartItem);
     }
 
