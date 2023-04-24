@@ -66,9 +66,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     @Override
     @Transactional
     public OrderDetailsDto makeOrder(OrderCreationDto orderCreationDto, Principal principal) {
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found!"));
+        User user = getUserByPrincipal(principal);
         Recipient recipient = recipientRepository.save(orderCreationDto.getRecipientDto().toRecipient());
         Address address = addressRepository.save(orderCreationDto.getAddressDto().toAddress());
         var shippingOptionDto = orderCreationDto.getShippingOptionDto();
@@ -77,11 +75,12 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         BigDecimal totalPrice = calcTotalOrderPrice(user, shippingOption);
         Order order = createOrder(user, recipient, shippingOption, address, totalPrice);
         transferCartItemsToOrder(user, order);
-        return new OrderDetailsDto(user.getUsername(), order.getDateTime(), order.getTotalPrice(), stripePublicKey);
+        return new OrderDetailsDto(order.getDateTime(), order.getTotalPrice(), stripePublicKey);
     }
 
     @Override
-    public void makeShippingPayment(PaymentCreationDto paymentCreationDto) {
+    public void makeShippingPayment(PaymentCreationDto paymentCreationDto, Principal principal) {
+        User user = getUserByPrincipal(principal);
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", paymentCreationDto.getTotalPrice());
         chargeParams.put("currency", PaymentCurrency.UAH);
@@ -98,7 +97,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
                     .source(charge.getSource().getId())
                     .build();
             paymentRepository.save(payment);
-            orderRepository.updateOrderStatus(paymentCreationDto.getOrderDateTime(), paymentCreationDto.getUsername(),
+            orderRepository.updateOrderStatus(paymentCreationDto.getOrderDateTime(), user.getEmail(),
                     OrderStatus.PROCESSING);
         } catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException
                  | APIException e) {
@@ -144,5 +143,11 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
                 ).collect(Collectors.toSet());
         orderItemRepository.saveAll(orderItems);
         cartItemsRepository.deleteCartItemsByUserId(user.getId());
+    }
+
+    private User getUserByPrincipal(Principal principal){
+        String email = principal.getName();
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found!"));
     }
 }

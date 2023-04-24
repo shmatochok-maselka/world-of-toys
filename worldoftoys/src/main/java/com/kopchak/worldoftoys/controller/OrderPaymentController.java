@@ -63,11 +63,12 @@ public class OrderPaymentController {
                                     schema = @Schema(implementation = UserNotFoundException.class)))
             })
     @PostMapping("/order")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<OrderDetailsDto> makeOrder(@Valid @Schema(
             description = "The data of order",
             implementation = OrderCreationDto.class) @RequestBody OrderCreationDto orderCreationDto,
                                                      @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
-                                               example = "Bearer access_token") Principal principal) {
+                                                             example = "Bearer access_token") Principal principal) {
         return new ResponseEntity<>(orderPaymentService.makeOrder(orderCreationDto, principal), HttpStatus.CREATED);
     }
 
@@ -89,8 +90,10 @@ public class OrderPaymentController {
     @PostMapping("/payment")
     public ResponseEntity<?> makeShippingPayment(@Valid @Schema(
             description = "The data for payment",
-            implementation = PaymentCreationDto.class) @RequestBody PaymentCreationDto paymentCreationDto) {
-        orderPaymentService.makeShippingPayment(paymentCreationDto);
+            implementation = PaymentCreationDto.class) @RequestBody PaymentCreationDto paymentCreationDto,
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+            example = "Bearer access_token") Principal principal) {
+        orderPaymentService.makeShippingPayment(paymentCreationDto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

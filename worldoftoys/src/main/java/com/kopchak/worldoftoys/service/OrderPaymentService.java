@@ -12,5 +12,5 @@ public interface OrderPaymentService {
     Set<ShippingOptionDto> getAllShippingOptions();
 
     OrderDetailsDto makeOrder(OrderCreationDto orderCreationDto, Principal principal);
-    void makeShippingPayment(PaymentCreationDto paymentCreationDto);
+    void makeShippingPayment(PaymentCreationDto paymentCreationDto, Principal principal);
 }

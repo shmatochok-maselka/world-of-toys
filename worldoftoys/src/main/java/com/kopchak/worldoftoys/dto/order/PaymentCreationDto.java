@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentCreationDto {
-    private String username;
     private LocalDateTime orderDateTime;
     private BigDecimal totalPrice;
     private String stripeToken;
