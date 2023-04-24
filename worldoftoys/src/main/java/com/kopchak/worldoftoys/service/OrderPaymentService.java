@@ -10,5 +10,5 @@ public interface OrderPaymentService {
 
     OrderDetailsDto makeOrder(OrderCreationDto orderCreationDto, Principal principal);
     void makeShippingPayment(PaymentCreationDto paymentCreationDto, Principal principal);
-    void refund(Refund refund);
+    Set<UserOrderDto> getUserOrders(Principal principal);
 }

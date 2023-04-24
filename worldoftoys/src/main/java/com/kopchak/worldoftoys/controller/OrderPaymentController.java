@@ -1,9 +1,6 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.dto.order.OrderCreationDto;
-import com.kopchak.worldoftoys.dto.order.OrderDetailsDto;
-import com.kopchak.worldoftoys.dto.order.PaymentCreationDto;
-import com.kopchak.worldoftoys.dto.order.ShippingOptionDto;
+import com.kopchak.worldoftoys.dto.order.*;
 import com.kopchak.worldoftoys.exception.PaymentFailedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.OrderPaymentService;
@@ -26,7 +23,7 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin(value = {"http://localhost:4200", "http://localhost:8080"})
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 @Tag(name = "order-controller", description = "Controller for")
 public class OrderPaymentController {
@@ -43,7 +40,7 @@ public class OrderPaymentController {
                     )
             })
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/order/shipping-options")
+    @GetMapping("/shipping-options")
     public ResponseEntity<Set<ShippingOptionDto>> getAllShippingOptions() {
         return new ResponseEntity<>(orderPaymentService.getAllShippingOptions(), HttpStatus.OK);
     }
@@ -62,7 +59,7 @@ public class OrderPaymentController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = UserNotFoundException.class)))
             })
-    @PostMapping("/order")
+    @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<OrderDetailsDto> makeOrder(@Valid @Schema(
             description = "The data of order",
@@ -71,7 +68,6 @@ public class OrderPaymentController {
                                                              example = "Bearer access_token") Principal principal) {
         return new ResponseEntity<>(orderPaymentService.makeOrder(orderCreationDto, principal), HttpStatus.CREATED);
     }
-
 
     @Operation(summary = "Pay for the order",
             responses = {
@@ -95,5 +91,26 @@ public class OrderPaymentController {
             example = "Bearer access_token") Principal principal) {
         orderPaymentService.makeShippingPayment(paymentCreationDto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Get all user's orders",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Orders have been successfully returned",
+                            content = @Content(schema = @Schema(hidden = true))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User not found",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserNotFoundException.class)))
+            })
+    @GetMapping("/user")
+    public ResponseEntity<Set<UserOrderDto>> getUserOrders(
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                   example = "Bearer access_token") Principal principal) {
+        return new ResponseEntity<>(orderPaymentService.getUserOrders(principal), HttpStatus.OK);
     }
 }

@@ -1,9 +1,7 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.order.OrderCreationDto;
-import com.kopchak.worldoftoys.dto.order.OrderDetailsDto;
-import com.kopchak.worldoftoys.dto.order.PaymentCreationDto;
-import com.kopchak.worldoftoys.dto.order.ShippingOptionDto;
+import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.order.*;
 import com.kopchak.worldoftoys.exception.PaymentFailedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.User;
@@ -18,6 +16,8 @@ import com.kopchak.worldoftoys.service.OrderPaymentService;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Charge;
+import com.stripe.model.Refund;
+import com.stripe.param.RefundCreateParams;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +81,10 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     @Override
     public void makeShippingPayment(PaymentCreationDto paymentCreationDto, Principal principal) {
         User user = getUserByPrincipal(principal);
+        Order order = orderRepository.searchByDateTimeAndUser(paymentCreationDto.getOrderDateTime(), user);
+        if (order.getPayment() != null) {
+            throw new PaymentFailedException(HttpStatus.BAD_REQUEST, "The order has already been paid");
+        }
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", paymentCreationDto.getTotalPrice());
         chargeParams.put("currency", PaymentCurrency.UAH);
@@ -96,13 +100,30 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
                     .description(charge.getDescription())
                     .source(charge.getSource().getId())
                     .build();
-            paymentRepository.save(payment);
-            orderRepository.updateOrderStatus(paymentCreationDto.getOrderDateTime(), user.getEmail(),
-                    OrderStatus.PROCESSING);
-        } catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException
-                 | APIException e) {
+            payment = paymentRepository.save(payment);
+            order.setStatus(OrderStatus.PROCESSING);
+            order.setPayment(payment);
+            orderRepository.save(order);
+        } catch (StripeException e) {
             throw new PaymentFailedException(HttpStatus.PAYMENT_REQUIRED, "Payment failed: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Set<UserOrderDto> getUserOrders(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        Set<Order> orders = orderRepository.searchAllByUser(user);
+        return orders
+                .stream()
+                .map(order -> UserOrderDto
+                        .builder()
+                        .dateTime(order.getDateTime())
+                        .status(order.getStatus())
+                        .totalPrice(order.getTotalPrice())
+                        .products(convertOrderItemToCartItemDtoSet(
+                                orderItemRepository.searchAllByOrderId(order.getId())))
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     private BigDecimal calcTotalOrderPrice(User user, ShippingOption shippingOption) {
@@ -145,9 +166,21 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         cartItemsRepository.deleteCartItemsByUserId(user.getId());
     }
 
-    private User getUserByPrincipal(Principal principal){
+    private User getUserByPrincipal(Principal principal) {
         String email = principal.getName();
         return userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found!"));
+    }
+
+    private Set<CartItemResponseDto> convertOrderItemToCartItemDtoSet(Set<OrderItem> orderItems) {
+        return orderItems.stream().map(orderItem -> CartItemResponseDto
+                        .builder()
+                        .name(orderItem.getId().getProduct().getName())
+                        .slug(orderItem.getId().getProduct().getSlug())
+                        .image(orderItem.getId().getProduct().getImage())
+                        .price(orderItem.getId().getProduct().getPrice())
+                        .quantity(orderItem.getQuantity())
+                        .build())
+                .collect(Collectors.toSet());
     }
 }
