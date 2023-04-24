@@ -10,5 +10,6 @@ public interface OrderPaymentService {
 
     OrderDetailsDto makeOrder(OrderCreationDto orderCreationDto, Principal principal);
     void makeShippingPayment(PaymentCreationDto paymentCreationDto, Principal principal);
+    void refundOrder(OrderDateDto orderDateDto, Principal principal);
     Set<UserOrderDto> getUserOrders(Principal principal);
 }

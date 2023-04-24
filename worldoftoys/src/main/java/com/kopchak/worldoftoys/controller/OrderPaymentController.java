@@ -87,8 +87,8 @@ public class OrderPaymentController {
     public ResponseEntity<?> makeShippingPayment(@Valid @Schema(
             description = "The data for payment",
             implementation = PaymentCreationDto.class) @RequestBody PaymentCreationDto paymentCreationDto,
-            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
-            example = "Bearer access_token") Principal principal) {
+                                                 @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                                                         example = "Bearer access_token") Principal principal) {
         orderPaymentService.makeShippingPayment(paymentCreationDto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -110,7 +110,37 @@ public class OrderPaymentController {
     @GetMapping("/user")
     public ResponseEntity<Set<UserOrderDto>> getUserOrders(
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
-                   example = "Bearer access_token") Principal principal) {
+                    example = "Bearer access_token") Principal principal) {
         return new ResponseEntity<>(orderPaymentService.getUserOrders(principal), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Refund for the order",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Refund succeed",
+                            content = @Content(schema = @Schema(hidden = true))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "The status of the order is unpaid or sent",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PaymentFailedException.class))),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User not found",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserNotFoundException.class)))
+            })
+    @PostMapping("/refund")
+    public ResponseEntity<?> refundOrder(@Valid @Schema(
+            description = "Order data",
+            implementation = OrderDateDto.class) @RequestBody OrderDateDto orderDateDto,
+                                         @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                                                 example = "Bearer access_token") Principal principal) {
+        orderPaymentService.refundOrder(orderDateDto, principal);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

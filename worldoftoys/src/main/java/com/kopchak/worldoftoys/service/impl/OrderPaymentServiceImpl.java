@@ -110,6 +110,23 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     }
 
     @Override
+    public void refundOrder(OrderDateDto orderDateDto, Principal principal) {
+        Order order = orderRepository.searchByDateTimeAndUser(orderDateDto.getOrderDateTime(),
+                getUserByPrincipal(principal));
+        if (order.getStatus() != OrderStatus.PROCESSING) {
+            throw new PaymentFailedException(HttpStatus.BAD_REQUEST, "The status of the order is unpaid or sent");
+        }
+        RefundCreateParams refundParams = RefundCreateParams.builder()
+                .setCharge(order.getPayment().getId())
+                .build();
+        try {
+            Refund.create(refundParams);
+        } catch (StripeException e) {
+            throw new PaymentFailedException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @Override
     public Set<UserOrderDto> getUserOrders(Principal principal) {
         User user = getUserByPrincipal(principal);
         Set<Order> orders = orderRepository.searchAllByUser(user);
