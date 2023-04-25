@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
 import com.kopchak.worldoftoys.dto.cart.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.UserService;
@@ -29,14 +30,14 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Add product to card")
+    @Operation(summary = "Update user account information")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
-                    description = "Product has been successfully added to the cart",
+                    responseCode = "204",
+                    description = "User data has been successfully changed",
                     content = @Content),
             @ApiResponse(responseCode = "404",
-                    description = "User or product not found",
+                    description = "User not found",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(oneOf = {
@@ -44,15 +45,15 @@ public class UserController {
                             })))
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "/add-product")
-    public ResponseEntity<?> addProductToCart(
+    @PostMapping(value = "/update")
+    public ResponseEntity<?> updateUser(
             @Valid @Schema(
                     description = "The data of product to be added to the cart",
                     implementation = CartItemRequestDto.class)
-            @RequestBody CartItemRequestDto cartItemRequestDTO,
+            @RequestBody UserUpdateDto userUpdateDto,
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                     example = "Bearer access_token") Principal principal) {
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        userService.updateUser(userUpdateDto, principal);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -3,6 +3,7 @@ package com.kopchak.worldoftoys.service.impl;
 import com.kopchak.worldoftoys.dto.user.UserAuthDto;
 import com.kopchak.worldoftoys.dto.user.UserDto;
 import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
@@ -17,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Principal;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -65,6 +69,22 @@ public class UserServiceImpl implements UserService {
     public boolean isPasswordValid(UserAuthDto userAuthDto) {
         User user = findUserByEmail(userAuthDto.getEmail());
         return passwordEncoder.matches(userAuthDto.getPassword(), user.getPassword());
+    }
+
+    @Override
+    public void updateUser(UserUpdateDto userUpdateDto, Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        if(!isValidName(userUpdateDto.getFirstname())){
+            user.setFirstname(userUpdateDto.getFirstname());
+        }
+        if(!isValidName(userUpdateDto.getLastname())){
+            user.setLastname(userUpdateDto.getLastname());
+        }
+        userRepository.save(user);
+    }
+
+    private boolean isValidName(String name){
+        return name == null || name.isEmpty() || name.trim().isEmpty();
     }
 
     private void saveUserToken(User user, String jwtToken) {
