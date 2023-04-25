@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.dto.*;
+import com.kopchak.worldoftoys.dto.token.TokenAuthDto;
+import com.kopchak.worldoftoys.dto.user.*;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.NewPasswordMatchesOldException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;

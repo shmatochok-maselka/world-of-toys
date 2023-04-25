@@ -1,8 +1,8 @@
 package com.kopchak.worldoftoys.dto.order;
 
-import com.kopchak.worldoftoys.model.order.ShippingMethod;
-import com.kopchak.worldoftoys.model.order.ShippingOption;
-import com.kopchak.worldoftoys.model.order.ShippingType;
+import com.kopchak.worldoftoys.model.order.shipping.ShippingMethod;
+import com.kopchak.worldoftoys.model.order.shipping.ShippingOption;
+import com.kopchak.worldoftoys.model.order.shipping.ShippingType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

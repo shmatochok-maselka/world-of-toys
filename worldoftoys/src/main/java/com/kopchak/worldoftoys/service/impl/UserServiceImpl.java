@@ -1,14 +1,15 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.UserAuthDto;
-import com.kopchak.worldoftoys.dto.UserDto;
-import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.UserAuthDto;
+import com.kopchak.worldoftoys.dto.user.UserDto;
+import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.*;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
-import com.kopchak.worldoftoys.repository.AuthTokenRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.model.user.Role;
+import com.kopchak.worldoftoys.model.user.User;
+import com.kopchak.worldoftoys.repository.token.AuthTokenRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;
 import com.kopchak.worldoftoys.service.UserService;
 import lombok.RequiredArgsConstructor;

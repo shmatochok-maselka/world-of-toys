@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.model.token;
 
-import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

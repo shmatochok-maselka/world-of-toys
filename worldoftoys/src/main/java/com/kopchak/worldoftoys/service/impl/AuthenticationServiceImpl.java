@@ -1,9 +1,9 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.TokenAuthDto;
-import com.kopchak.worldoftoys.dto.UserAuthDto;
-import com.kopchak.worldoftoys.dto.UserRegisterDto;
-import com.kopchak.worldoftoys.dto.UsernameDto;
+import com.kopchak.worldoftoys.dto.token.TokenAuthDto;
+import com.kopchak.worldoftoys.dto.user.UserAuthDto;
+import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.UsernameDto;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;

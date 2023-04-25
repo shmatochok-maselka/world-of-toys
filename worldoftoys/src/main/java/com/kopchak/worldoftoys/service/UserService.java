@@ -1,8 +1,8 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.dto.UserAuthDto;
-import com.kopchak.worldoftoys.dto.UserDto;
-import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.UserAuthDto;
+import com.kopchak.worldoftoys.dto.user.UserDto;
+import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
 
 public interface UserService {
     UserRegisterDto registerUser(UserRegisterDto userRegisterDto);

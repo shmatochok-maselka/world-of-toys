@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.filter;
 
-import com.kopchak.worldoftoys.repository.AuthTokenRepository;
+import com.kopchak.worldoftoys.repository.token.AuthTokenRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

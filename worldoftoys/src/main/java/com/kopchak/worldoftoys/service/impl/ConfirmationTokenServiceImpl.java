@@ -1,15 +1,15 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.ConfirmTokenDto;
-import com.kopchak.worldoftoys.dto.PasswordResetDto;
+import com.kopchak.worldoftoys.dto.token.ConfirmTokenDto;
+import com.kopchak.worldoftoys.dto.user.PasswordResetDto;
 import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
 import com.kopchak.worldoftoys.exception.NewPasswordMatchesOldException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.user.User;
 import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
 import com.kopchak.worldoftoys.model.token.ConfirmationToken;
-import com.kopchak.worldoftoys.repository.ConfirmationTokenRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.repository.token.ConfirmationTokenRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

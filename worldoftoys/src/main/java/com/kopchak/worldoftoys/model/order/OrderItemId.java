@@ -1,7 +1,6 @@
 package com.kopchak.worldoftoys.model.order;
 
-import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.product.Product;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

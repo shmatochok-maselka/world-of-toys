@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.config;
 
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

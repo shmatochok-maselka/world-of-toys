@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.dto.order;
 
-import com.kopchak.worldoftoys.model.order.Address;
+import com.kopchak.worldoftoys.model.order.address.Address;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

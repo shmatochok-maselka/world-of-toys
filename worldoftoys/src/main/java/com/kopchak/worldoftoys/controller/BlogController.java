@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.dto.BlogPostDto;
+import com.kopchak.worldoftoys.dto.blog.BlogPostDto;
 import com.kopchak.worldoftoys.exception.BlogPostNotFoundException;
 import com.kopchak.worldoftoys.service.BlogService;
 import io.swagger.v3.oas.annotations.Operation;

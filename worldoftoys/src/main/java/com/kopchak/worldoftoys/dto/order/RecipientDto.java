@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.dto.order;
 
-import com.kopchak.worldoftoys.model.order.CountryCode;
-import com.kopchak.worldoftoys.model.order.Recipient;
+import com.kopchak.worldoftoys.model.order.recipient.CountryCode;
+import com.kopchak.worldoftoys.model.order.recipient.Recipient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

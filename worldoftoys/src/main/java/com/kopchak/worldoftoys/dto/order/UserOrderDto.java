@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.dto.order;
 
-import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemResponseDto;
 import com.kopchak.worldoftoys.model.order.OrderStatus;
 import lombok.*;
 

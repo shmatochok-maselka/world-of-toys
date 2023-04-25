@@ -1,16 +1,19 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemResponseDto;
 import com.kopchak.worldoftoys.dto.order.*;
 import com.kopchak.worldoftoys.exception.PaymentFailedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.order.address.Address;
+import com.kopchak.worldoftoys.model.order.recipient.Recipient;
+import com.kopchak.worldoftoys.model.order.shipping.ShippingOption;
+import com.kopchak.worldoftoys.model.user.User;
 import com.kopchak.worldoftoys.model.order.*;
 import com.kopchak.worldoftoys.model.payment.Payment;
 import com.kopchak.worldoftoys.model.payment.PaymentCurrency;
-import com.kopchak.worldoftoys.repository.CartItemsRepository;
-import com.kopchak.worldoftoys.repository.PaymentRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.repository.cart.CartItemsRepository;
+import com.kopchak.worldoftoys.repository.order.PaymentRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.repository.order.*;
 import com.kopchak.worldoftoys.service.OrderPaymentService;
 import com.stripe.Stripe;
