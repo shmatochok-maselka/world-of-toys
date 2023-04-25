@@ -31,9 +31,14 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addProductToCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
         CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
-        CartItem cartItem = new CartItem();
-        cartItem.setId(cartItemId);
-        cartItem.setQuantity(cartItemRequestDto.getQuantity());
+        CartItem cartItem = cartItemsRepository.searchById(cartItemId);
+        if(cartItem == null){
+            cartItem = new CartItem();
+            cartItem.setId(cartItemId);
+            cartItem.setQuantity(cartItemRequestDto.getQuantity());
+        }else {
+            cartItem.setQuantity(cartItem.getQuantity() + cartItemRequestDto.getQuantity());
+        }
         cartItemsRepository.save(cartItem);
     }
 
