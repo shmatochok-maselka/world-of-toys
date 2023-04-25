@@ -9,6 +9,7 @@ TRUNCATE TABLE type_category;
 TRUNCATE TABLE product;
 TRUNCATE TABLE product_age_category;
 TRUNCATE TABLE blog_post;
+TRUNCATE TABLE shipping_option;
 
 INSERT INTO age_category(id, name)
 VALUES (1, '0-1 роки'),
@@ -296,3 +297,9 @@ Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae lab
 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, perferendis, sunt! Eum est dolorum vero sequi iure mollitia odit nam consequatur corporis? Rerum doloribus quis tempore nesciunt quidem quia sit.
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi molestias, doloremque assumenda est nesciunt! Pariatur, dolorum, molestiae maiores nihil exercitationem, quos eos culpa fugiat quaerat magni expedita iusto impedit aut.
 Lorem, ipsum dolor, sit amet consectetur adipisicing elit. Maiores molestiae laborum rerum praesentium iste dolores, harum, quis, voluptate minus quod adipisci. Quasi esse necessitatibus, optio vitae explicabo voluptatem autem et.');
+
+INSERT INTO shipping_option(id, method, type, price)
+VALUES (1, 'COURIER', 'STANDARD', 100),
+    (2, 'COURIER', 'EXPRESS', 150),
+    (3, 'POSTAL_SERVICE', 'STANDARD', 50),
+    (4, 'POSTAL_SERVICE', 'EXPRESS', 100);

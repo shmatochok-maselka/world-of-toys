@@ -34,3 +34,8 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
+stripe:
+  secret:
+    key: sk_test
+  public:
+    key: pk_test
