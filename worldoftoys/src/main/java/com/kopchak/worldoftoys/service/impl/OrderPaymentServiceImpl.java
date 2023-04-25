@@ -121,6 +121,8 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
                 .build();
         try {
             Refund.create(refundParams);
+            order.setStatus(OrderStatus.REFUNDED);
+            orderRepository.save(order);
         } catch (StripeException e) {
             throw new PaymentFailedException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
