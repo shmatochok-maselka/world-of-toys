@@ -25,7 +25,8 @@ import java.util.Set;
 @CrossOrigin(value = {"http://localhost:4200", "http://localhost:8080"})
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-@Tag(name = "order-controller", description = "Controller for")
+@Tag(name = "order-controller", description = "Controller for return all shipping " +
+        "options for orders, create new orders, pay for orders, get all user orders, and refund order.")
 public class OrderPaymentController {
     private final OrderPaymentService orderPaymentService;
 
@@ -83,6 +84,7 @@ public class OrderPaymentController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = PaymentFailedException.class)))
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/payment")
     public ResponseEntity<?> makeShippingPayment(@Valid @Schema(
             description = "The data for payment",
@@ -107,6 +109,7 @@ public class OrderPaymentController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = UserNotFoundException.class)))
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/user")
     public ResponseEntity<Set<UserOrderDto>> getUserOrders(
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
@@ -134,9 +137,10 @@ public class OrderPaymentController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = UserNotFoundException.class)))
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/refund")
     public ResponseEntity<?> refundOrder(@Valid @Schema(
-            description = "Order data",
+            description = "The date of the order to be refunded",
             implementation = OrderDateDto.class) @RequestBody OrderDateDto orderDateDto,
                                          @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                                                  example = "Bearer access_token") Principal principal) {
