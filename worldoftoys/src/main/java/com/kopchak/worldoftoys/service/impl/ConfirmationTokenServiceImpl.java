@@ -1,9 +1,9 @@
 package com.kopchak.worldoftoys.service.impl;
 
 import com.kopchak.worldoftoys.dto.token.ConfirmTokenDto;
-import com.kopchak.worldoftoys.dto.user.PasswordResetDto;
+import com.kopchak.worldoftoys.dto.user.ResetPasswordDto;
 import com.kopchak.worldoftoys.exception.ConfirmationTokenExpiredException;
-import com.kopchak.worldoftoys.exception.NewPasswordMatchesOldException;
+import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.user.User;
 import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
@@ -69,13 +69,13 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     @Transactional
-    public String confirmResetToken(String token, PasswordResetDto newPassword) {
+    public String confirmResetToken(String token, ResetPasswordDto newPassword) {
         ConfirmationToken confirmationToken = getToken(token);
         setConfirmedAt(token);
         String email = confirmationToken.getUser().getEmail();
         var user = findUserByEmail(email);
         if(passwordEncoder.matches(newPassword.getPassword(), user.getPassword())){
-            throw new NewPasswordMatchesOldException(HttpStatus.BAD_REQUEST, "New password matches old password!");
+            throw new IncorrectPasswordException(HttpStatus.BAD_REQUEST, "New password matches old password!");
         }
         user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
         return "Password successfully changed!";

@@ -3,7 +3,7 @@ package com.kopchak.worldoftoys.controller;
 import com.kopchak.worldoftoys.dto.token.TokenAuthDto;
 import com.kopchak.worldoftoys.dto.user.*;
 import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
-import com.kopchak.worldoftoys.exception.NewPasswordMatchesOldException;
+import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
 import com.kopchak.worldoftoys.service.AuthenticationService;
@@ -123,14 +123,14 @@ public class AuthenticationController {
                     responseCode = "404",
                     description = "User not found or new password matches old password!",
                     content = @Content(schema = @Schema(oneOf = {
-                            UserNotFoundException.class, NewPasswordMatchesOldException.class
+                            UserNotFoundException.class, IncorrectPasswordException.class
                     })))
     })
     @PostMapping(path = "/forgot-password")
     public ResponseEntity<String> changePassword(@Parameter(
             description = "Token to change the user's password",
             required = true) @RequestParam("token") String token,
-            @Valid @RequestBody PasswordResetDto newPassword) {
+            @Valid @RequestBody ResetPasswordDto newPassword) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(confirmationTokenService.confirmResetToken(token, newPassword));
     }
