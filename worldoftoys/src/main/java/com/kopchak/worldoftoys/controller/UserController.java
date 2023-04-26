@@ -1,7 +1,9 @@
 package com.kopchak.worldoftoys.controller;
 
 import com.kopchak.worldoftoys.dto.cart.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.user.ChangePasswordDto;
 import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
+import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.UserService;
@@ -33,16 +35,14 @@ public class UserController {
     @Operation(summary = "Update user account information")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
+                    responseCode = "200",
                     description = "User data has been successfully changed",
-                    content = @Content),
+                    content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404",
                     description = "User not found",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(oneOf = {
-                                    UserNotFoundException.class, ProductNotFoundException.class
-                            })))
+                            schema = @Schema(implementation = UserNotFoundException.class)))
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = "/update")
@@ -54,6 +54,35 @@ public class UserController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                     example = "Bearer access_token") Principal principal) {
         userService.updateUser(userUpdateDto, principal);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Update user account information")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Password has been successfully changed",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "400",
+                    description = "Password is incorrect",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectPasswordException.class))),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserNotFoundException.class)))
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = "/change-password")
+    public ResponseEntity<?> changePassword(
+            @Valid @Schema(
+                    implementation = ChangePasswordDto.class)
+            @RequestBody ChangePasswordDto changePasswordDto,
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                    example = "Bearer access_token") Principal principal) {
+        userService.changePassword(changePasswordDto, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

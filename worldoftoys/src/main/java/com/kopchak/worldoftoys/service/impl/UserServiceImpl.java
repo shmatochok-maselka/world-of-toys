@@ -1,9 +1,7 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.user.UserAuthDto;
-import com.kopchak.worldoftoys.dto.user.UserDto;
-import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
-import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
+import com.kopchak.worldoftoys.dto.user.*;
+import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
@@ -66,9 +64,9 @@ public class UserServiceImpl implements UserService {
         return jwtToken;
     }
 
-    public boolean isPasswordValid(UserAuthDto userAuthDto) {
-        User user = findUserByEmail(userAuthDto.getEmail());
-        return passwordEncoder.matches(userAuthDto.getPassword(), user.getPassword());
+    public boolean isPasswordsMatch(String username, String password) {
+        User user = findUserByEmail(username);
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
     @Override
@@ -80,6 +78,19 @@ public class UserServiceImpl implements UserService {
         if(!isValidName(userUpdateDto.getLastname())){
             user.setLastname(userUpdateDto.getLastname());
         }
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto changePasswordDto, Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        if(!isPasswordsMatch(user.getUsername(), changePasswordDto.getOldPassword())){
+            throw new IncorrectPasswordException(HttpStatus.BAD_REQUEST, "Incorrect old password!");
+        }
+        if(isPasswordsMatch(user.getUsername(), changePasswordDto.getNewPassword())){
+            throw new IncorrectPasswordException(HttpStatus.BAD_REQUEST, "New password matches old password!");
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         userRepository.save(user);
     }
 

@@ -1,9 +1,6 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.dto.user.UserAuthDto;
-import com.kopchak.worldoftoys.dto.user.UserDto;
-import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
-import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
+import com.kopchak.worldoftoys.dto.user.*;
 
 import java.security.Principal;
 
@@ -13,7 +10,7 @@ public interface UserService {
     String saveUserAuthToken(String email);
     boolean isUserActivated(String email);
     UserDto findUserByUsername(String email);
-    boolean isPasswordValid(UserAuthDto userAuthDto);
-
+    boolean isPasswordsMatch(String username, String password);
     void updateUser(UserUpdateDto userUpdateDto, Principal principal);
+    void changePassword(ChangePasswordDto changePasswordDto,Principal principal);
 }

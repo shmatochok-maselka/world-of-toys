@@ -13,12 +13,12 @@ import lombok.*;
 @Schema(description = "Set new password")
 public class ChangePasswordDto {
     @Schema(example = "password1234", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "Old password is mandatory")
     @Size(min = 8, max = 30, message = "Password must from 8 to 30 characters long")
     private String oldPassword;
 
     @Schema(example = "password12345", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "New password is mandatory")
     @Size(min = 8, max = 30, message = "Password must from 8 to 30 characters long")
     private String newPassword;
 }
