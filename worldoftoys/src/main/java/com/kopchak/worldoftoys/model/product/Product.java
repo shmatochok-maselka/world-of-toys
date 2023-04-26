@@ -18,7 +18,6 @@ import java.util.Set;
 @Entity
 public class Product {
     @Id
-    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 60)

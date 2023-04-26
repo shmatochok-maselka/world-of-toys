@@ -35,7 +35,7 @@ public class UserController {
     @Operation(summary = "Update user account information")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "User data has been successfully changed",
                     content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404",
@@ -45,7 +45,7 @@ public class UserController {
                             schema = @Schema(implementation = UserNotFoundException.class)))
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "/update")
+    @PutMapping(value = "/update")
     public ResponseEntity<?> updateUser(
             @Valid @Schema(
                     description = "The data of product to be added to the cart",
@@ -54,13 +54,13 @@ public class UserController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                     example = "Bearer access_token") Principal principal) {
         userService.updateUser(userUpdateDto, principal);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Operation(summary = "Update user account information")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "Password has been successfully changed",
                     content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "400",
@@ -75,7 +75,7 @@ public class UserController {
                             schema = @Schema(implementation = UserNotFoundException.class)))
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "/change-password")
+    @PutMapping(value = "/change-password")
     public ResponseEntity<?> changePassword(
             @Valid @Schema(
                     implementation = ChangePasswordDto.class)
@@ -83,6 +83,27 @@ public class UserController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                     example = "Bearer access_token") Principal principal) {
         userService.changePassword(changePasswordDto, principal);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "Delete user account")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Account has been successfully deleted",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserNotFoundException.class)))
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
+    @DeleteMapping (value = "/delete-account")
+    public ResponseEntity<?> deleteAccount(
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
+                    example = "Bearer access_token") Principal principal) {
+        userService.deleteAccount(principal);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

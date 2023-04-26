@@ -13,4 +13,5 @@ public interface UserService {
     boolean isPasswordsMatch(String username, String password);
     void updateUser(UserUpdateDto userUpdateDto, Principal principal);
     void changePassword(ChangePasswordDto changePasswordDto,Principal principal);
+    void deleteAccount(Principal principal);
 }

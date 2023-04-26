@@ -7,6 +7,7 @@ import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
 import com.kopchak.worldoftoys.model.user.Role;
 import com.kopchak.worldoftoys.model.user.User;
+import com.kopchak.worldoftoys.repository.cart.CartItemsRepository;
 import com.kopchak.worldoftoys.repository.token.AuthTokenRepository;
 import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final AuthTokenRepository authTokenRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
-
+    private final CartItemsRepository cartItemsRepository;
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
         User user = userRegisterDto.toUser();
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
@@ -92,6 +93,13 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAccount(Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        cartItemsRepository.deleteCartItemsByUserId(user.getId());
+        userRepository.delete(user);
     }
 
     private boolean isValidName(String name){

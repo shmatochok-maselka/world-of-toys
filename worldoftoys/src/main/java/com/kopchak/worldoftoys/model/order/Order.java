@@ -36,7 +36,6 @@ public class Order {
     private BigDecimal totalPrice;
 
     @ManyToOne
-    @NonNull
     @JoinColumn(name = "user_id")
     private User user;
 
