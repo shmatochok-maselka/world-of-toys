@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
-import com.kopchak.worldoftoys.dto.ProductShopDto;
+import com.kopchak.worldoftoys.dto.product.AllProductCategoriesDto;
+import com.kopchak.worldoftoys.dto.product.ProductShopDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;

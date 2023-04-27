@@ -1,9 +1,9 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.BlogPostDto;
+import com.kopchak.worldoftoys.dto.blog.BlogPostDto;
 import com.kopchak.worldoftoys.exception.BlogPostNotFoundException;
-import com.kopchak.worldoftoys.model.BlogPost;
-import com.kopchak.worldoftoys.repository.BlogPostRepository;
+import com.kopchak.worldoftoys.model.blog.BlogPost;
+import com.kopchak.worldoftoys.repository.blog.BlogPostRepository;
 import com.kopchak.worldoftoys.service.BlogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

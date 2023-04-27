@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
-import com.kopchak.worldoftoys.dto.ProductShopDto;
+import com.kopchak.worldoftoys.dto.product.AllProductCategoriesDto;
+import com.kopchak.worldoftoys.dto.product.ProductShopDto;
 
 import java.util.Set;
 

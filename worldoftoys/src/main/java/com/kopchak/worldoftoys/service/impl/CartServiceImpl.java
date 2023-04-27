@@ -1,16 +1,16 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.CartItemRequestDto;
-import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemResponseDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.CartItemId;
-import com.kopchak.worldoftoys.model.CartItem;
-import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.model.User;
-import com.kopchak.worldoftoys.repository.CartItemsRepository;
-import com.kopchak.worldoftoys.repository.ProductRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.model.cart.CartItemId;
+import com.kopchak.worldoftoys.model.cart.CartItem;
+import com.kopchak.worldoftoys.model.product.Product;
+import com.kopchak.worldoftoys.model.user.User;
+import com.kopchak.worldoftoys.repository.cart.CartItemsRepository;
+import com.kopchak.worldoftoys.repository.product.ProductRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.service.CartService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

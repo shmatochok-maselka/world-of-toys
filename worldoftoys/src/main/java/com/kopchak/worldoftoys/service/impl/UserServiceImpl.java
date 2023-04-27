@@ -1,14 +1,15 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.UserAuthDto;
-import com.kopchak.worldoftoys.dto.UserDto;
-import com.kopchak.worldoftoys.dto.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.*;
+import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
-import com.kopchak.worldoftoys.model.*;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
 import com.kopchak.worldoftoys.model.token.AuthenticationToken;
-import com.kopchak.worldoftoys.repository.AuthTokenRepository;
-import com.kopchak.worldoftoys.repository.UserRepository;
+import com.kopchak.worldoftoys.model.user.Role;
+import com.kopchak.worldoftoys.model.user.User;
+import com.kopchak.worldoftoys.repository.cart.CartItemsRepository;
+import com.kopchak.worldoftoys.repository.token.AuthTokenRepository;
+import com.kopchak.worldoftoys.repository.user.UserRepository;
 import com.kopchak.worldoftoys.service.JwtTokenService;
 import com.kopchak.worldoftoys.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Principal;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -25,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final AuthTokenRepository authTokenRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
-
+    private final CartItemsRepository cartItemsRepository;
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
         User user = userRegisterDto.toUser();
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
@@ -61,9 +65,45 @@ public class UserServiceImpl implements UserService {
         return jwtToken;
     }
 
-    public boolean isPasswordValid(UserAuthDto userAuthDto) {
-        User user = findUserByEmail(userAuthDto.getEmail());
-        return passwordEncoder.matches(userAuthDto.getPassword(), user.getPassword());
+    public boolean isPasswordsMatch(String username, String password) {
+        User user = findUserByEmail(username);
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    public void updateUser(UserUpdateDto userUpdateDto, Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        if(!isValidName(userUpdateDto.getFirstname())){
+            user.setFirstname(userUpdateDto.getFirstname());
+        }
+        if(!isValidName(userUpdateDto.getLastname())){
+            user.setLastname(userUpdateDto.getLastname());
+        }
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto changePasswordDto, Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        if(!isPasswordsMatch(user.getUsername(), changePasswordDto.getOldPassword())){
+            throw new IncorrectPasswordException(HttpStatus.BAD_REQUEST, "Incorrect old password!");
+        }
+        if(isPasswordsMatch(user.getUsername(), changePasswordDto.getNewPassword())){
+            throw new IncorrectPasswordException(HttpStatus.BAD_REQUEST, "New password matches old password!");
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAccount(Principal principal) {
+        User user = findUserByEmail(principal.getName());
+        cartItemsRepository.deleteCartItemsByUserId(user.getId());
+        userRepository.delete(user);
+    }
+
+    private boolean isValidName(String name){
+        return name == null || name.isEmpty() || name.trim().isEmpty();
     }
 
     private void saveUserToken(User user, String jwtToken) {

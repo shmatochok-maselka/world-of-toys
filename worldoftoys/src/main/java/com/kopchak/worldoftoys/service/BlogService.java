@@ -1,6 +1,6 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.dto.BlogPostDto;
+import com.kopchak.worldoftoys.dto.blog.BlogPostDto;
 
 import java.util.Set;
 

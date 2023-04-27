@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.service;
 
-import com.kopchak.worldoftoys.dto.CartItemRequestDto;
-import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemResponseDto;
 
 import java.security.Principal;
 import java.util.Set;

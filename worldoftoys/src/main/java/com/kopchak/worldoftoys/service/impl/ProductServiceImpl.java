@@ -1,16 +1,16 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.AllProductCategoriesDto;
-import com.kopchak.worldoftoys.dto.ProductCategoryDto;
-import com.kopchak.worldoftoys.dto.ProductShopDto;
-import com.kopchak.worldoftoys.dto.TypeCategoryDto;
+import com.kopchak.worldoftoys.dto.product.AllProductCategoriesDto;
+import com.kopchak.worldoftoys.dto.product.ProductCategoryDto;
+import com.kopchak.worldoftoys.dto.product.ProductShopDto;
+import com.kopchak.worldoftoys.dto.product.TypeCategoryDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
-import com.kopchak.worldoftoys.model.Product;
-import com.kopchak.worldoftoys.repository.ProductRepository;
-import com.kopchak.worldoftoys.repository.productcategory.AgeCategoryRepository;
-import com.kopchak.worldoftoys.repository.productcategory.GenderCategoryRepository;
-import com.kopchak.worldoftoys.repository.productcategory.OriginCategoryRepository;
-import com.kopchak.worldoftoys.repository.productcategory.TypeCategoryRepository;
+import com.kopchak.worldoftoys.model.product.Product;
+import com.kopchak.worldoftoys.repository.product.ProductRepository;
+import com.kopchak.worldoftoys.repository.product.category.AgeCategoryRepository;
+import com.kopchak.worldoftoys.repository.product.category.GenderCategoryRepository;
+import com.kopchak.worldoftoys.repository.product.category.OriginCategoryRepository;
+import com.kopchak.worldoftoys.repository.product.category.TypeCategoryRepository;
 import com.kopchak.worldoftoys.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

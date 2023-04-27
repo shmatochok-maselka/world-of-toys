@@ -1,6 +1,9 @@
 package com.kopchak.worldoftoys.model.order;
 
-import com.kopchak.worldoftoys.model.User;
+import com.kopchak.worldoftoys.model.order.address.Address;
+import com.kopchak.worldoftoys.model.order.recipient.Recipient;
+import com.kopchak.worldoftoys.model.order.shipping.ShippingOption;
+import com.kopchak.worldoftoys.model.user.User;
 import com.kopchak.worldoftoys.model.payment.Payment;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,7 +36,6 @@ public class Order {
     private BigDecimal totalPrice;
 
     @ManyToOne
-    @NonNull
     @JoinColumn(name = "user_id")
     private User user;
 

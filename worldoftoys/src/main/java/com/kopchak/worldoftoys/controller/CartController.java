@@ -1,7 +1,7 @@
 package com.kopchak.worldoftoys.controller;
 
-import com.kopchak.worldoftoys.dto.CartItemRequestDto;
-import com.kopchak.worldoftoys.dto.CartItemResponseDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemRequestDto;
+import com.kopchak.worldoftoys.dto.cart.CartItemResponseDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.service.CartService;
