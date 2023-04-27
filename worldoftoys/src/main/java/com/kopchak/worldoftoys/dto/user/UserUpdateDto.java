@@ -1,7 +1,6 @@
 package com.kopchak.worldoftoys.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -10,6 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "The data to update user account information")
 public class UserUpdateDto {
     @Schema(example = "Iryna", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Size(min = 3, max = 60, message = "Firstname must be up to 60 characters long")
