@@ -1,6 +1,7 @@
 package com.kopchak.worldoftoys.service;
 
 import com.kopchak.worldoftoys.dto.user.*;
+import com.kopchak.worldoftoys.model.user.Role;
 
 import java.security.Principal;
 
@@ -14,4 +15,5 @@ public interface UserService {
     void updateUser(UserUpdateDto userUpdateDto, Principal principal);
     void changePassword(ChangePasswordDto changePasswordDto,Principal principal);
     void deleteAccount(Principal principal);
+    boolean hasProperRoleForAuthentication(String email, Role role);
 }

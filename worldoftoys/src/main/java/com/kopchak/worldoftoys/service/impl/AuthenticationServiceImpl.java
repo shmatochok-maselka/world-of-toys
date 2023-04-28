@@ -8,6 +8,7 @@ import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
 import com.kopchak.worldoftoys.model.token.ConfirmTokenType;
+import com.kopchak.worldoftoys.model.user.Role;
 import com.kopchak.worldoftoys.service.AuthenticationService;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
 import com.kopchak.worldoftoys.service.EmailSenderService;
@@ -17,7 +18,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 @Transactional
@@ -73,9 +78,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public TokenAuthDto authenticate(UserAuthDto userAuthDto) {
+    public TokenAuthDto authenticate(UserAuthDto userAuthDto, Role role) {
         String username = userAuthDto.getEmail();
-        if (!userService.isUserRegistered(username) || !userService.isPasswordsMatch(username, userAuthDto.getPassword())) {
+        if (!userService.isUserRegistered(username) || !userService.isPasswordsMatch(username, userAuthDto.getPassword())
+            || !userService.hasProperRoleForAuthentication(username, role)) {
             throw new UserNotFoundException(HttpStatus.UNAUTHORIZED, "Bad user credentials!");
         }
         if (!userService.isUserActivated(username)) {

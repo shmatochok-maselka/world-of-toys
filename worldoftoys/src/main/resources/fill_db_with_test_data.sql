@@ -303,3 +303,6 @@ VALUES (1, 'COURIER', 'STANDARD', 100),
     (2, 'COURIER', 'EXPRESS', 150),
     (3, 'POSTAL_SERVICE', 'STANDARD', 50),
     (4, 'POSTAL_SERVICE', 'EXPRESS', 100);
+
+INSERT INTO user(email, enabled, firstname, lastname, locked, password, role)
+VALUES ('admin@gmail.com', TRUE, 'Admin', 'Admin', false, '$2a$10$uEEIcFX0YJJ8SPMftakM1.wndfpNUpH4rn3u7pIXKW32Rck5Qe45a', 'ADMIN');

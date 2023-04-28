@@ -39,7 +39,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @Email
-    @Column(length = 320)
+    @Column(unique = true, length = 320)
     @NotBlank(message = "Email is mandatory")
     @Size(min = 3, max = 320, message = "Email must be up to 320 characters long")
     private String email;

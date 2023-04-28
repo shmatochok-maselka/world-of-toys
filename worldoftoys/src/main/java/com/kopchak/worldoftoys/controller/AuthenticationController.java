@@ -6,6 +6,7 @@ import com.kopchak.worldoftoys.exception.AccountIsAlreadyActivatedException;
 import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.exception.UsernameAlreadyExistException;
+import com.kopchak.worldoftoys.model.user.Role;
 import com.kopchak.worldoftoys.service.AuthenticationService;
 import com.kopchak.worldoftoys.service.ConfirmationTokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -152,6 +153,6 @@ public class AuthenticationController {
     })
     @PostMapping("/authenticate")
     public ResponseEntity<TokenAuthDto> authenticate(@Valid @RequestBody UserAuthDto userAuthDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.authenticate(userAuthDto));
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.authenticate(userAuthDto, Role.USER));
     }
 }

@@ -1,6 +1,9 @@
 package com.kopchak.worldoftoys.service.impl;
 
-import com.kopchak.worldoftoys.dto.user.*;
+import com.kopchak.worldoftoys.dto.user.ChangePasswordDto;
+import com.kopchak.worldoftoys.dto.user.UserDto;
+import com.kopchak.worldoftoys.dto.user.UserRegisterDto;
+import com.kopchak.worldoftoys.dto.user.UserUpdateDto;
 import com.kopchak.worldoftoys.exception.IncorrectPasswordException;
 import com.kopchak.worldoftoys.exception.UserNotFoundException;
 import com.kopchak.worldoftoys.model.token.AuthTokenType;
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -100,6 +102,12 @@ public class UserServiceImpl implements UserService {
         User user = findUserByEmail(principal.getName());
         cartItemsRepository.deleteCartItemsByUserId(user.getId());
         userRepository.delete(user);
+    }
+
+    @Override
+    public boolean hasProperRoleForAuthentication(String email, Role role){
+        User user = findUserByEmail(email);
+        return user.getRole().equals(role);
     }
 
     private boolean isValidName(String name){
