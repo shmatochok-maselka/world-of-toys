@@ -6,11 +6,9 @@ import com.kopchak.worldoftoys.dto.product.ProductShopDto;
 import com.kopchak.worldoftoys.dto.product.TypeCategoryDto;
 import com.kopchak.worldoftoys.exception.ProductNotFoundException;
 import com.kopchak.worldoftoys.model.product.Product;
+import com.kopchak.worldoftoys.model.product.category.AgeCategory;
 import com.kopchak.worldoftoys.repository.product.ProductRepository;
-import com.kopchak.worldoftoys.repository.product.category.AgeCategoryRepository;
-import com.kopchak.worldoftoys.repository.product.category.GenderCategoryRepository;
-import com.kopchak.worldoftoys.repository.product.category.OriginCategoryRepository;
-import com.kopchak.worldoftoys.repository.product.category.TypeCategoryRepository;
+import com.kopchak.worldoftoys.repository.product.category.*;
 import com.kopchak.worldoftoys.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,9 +25,10 @@ public class ProductServiceImpl implements ProductService {
     private GenderCategoryRepository genderRepository;
     private OriginCategoryRepository originRepository;
     private TypeCategoryRepository typeRepository;
+    private BrandCategoryRepository brandRepository;
 
     @Override
-    public AllProductCategoriesDto getAllCategories(){
+    public AllProductCategoriesDto getAllCategories() {
         Double minProductPrice = productRepository.findMinProductPrice();
         Double maxProductPrice = productRepository.findMaxProductPrice();
         var ageCategories = ageRepository.findAll()
@@ -55,19 +54,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Set<ProductShopDto> getAllProducts(){
+    public Set<ProductShopDto> getAllProducts() {
         return productRepository.findAll().stream().map(ProductShopDto::new).collect(Collectors.toSet());
     }
 
-    public ProductShopDto getProductBySlug(String slug){
+    public ProductShopDto getProductBySlug(String slug) {
         Product product = productRepository.findBySlug(slug);
-        if(slug == null || product == null){
+        if (slug == null || product == null) {
             throw new ProductNotFoundException(HttpStatus.BAD_REQUEST, "Product does not exist!");
         }
         return new ProductShopDto(productRepository.findBySlug(slug));
     }
 
-    private Set<TypeCategoryDto> getTypeCategoriesWithBrands(){
+    @Override
+    public void createProduct(ProductShopDto productShopDto) {
+        Set<AgeCategory> ageCategories = productShopDto.getAgeCategory()
+                .stream()
+                .map(ageCategory -> ageRepository.findByName(ageCategory.getName()))
+                .collect(Collectors.toSet());
+        Product product = Product
+                .builder()
+                .name(productShopDto.getName())
+                .description(productShopDto.getDescription())
+                .image(productShopDto.getImage())
+                .price(productShopDto.getPrice())
+                .originCategory(originRepository.findByName(productShopDto.getOriginCategory().getName()))
+                .genderCategory(genderRepository.findByName(productShopDto.getGenderCategory().getName()))
+                .brandCategory(brandRepository.findByName(productShopDto.getBrandCategory().getName()))
+                .typeCategory(typeRepository.findByName(productShopDto.getTypeCategory().getName()))
+                .ageCategory(ageCategories)
+                .build();
+        productRepository.save(product);
+    }
+
+    private Set<TypeCategoryDto> getTypeCategoriesWithBrands() {
         return typeRepository.findAll().stream()
                 .map(typeCategory -> {
                     Set<ProductCategoryDto> brandCategory = productRepository.findAllBrandsByTypeCategory(typeCategory)

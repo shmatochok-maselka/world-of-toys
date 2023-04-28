@@ -18,9 +18,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.security.Principal;
 
 @RestController
 @CrossOrigin(value = {"http://localhost:4200", "http://localhost:8080"})
@@ -46,5 +47,18 @@ public class AdminController {
     @PostMapping("/authenticate")
     public ResponseEntity<TokenAuthDto> authenticate(@Valid @RequestBody UserAuthDto userAuthDto) {
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.authenticate(userAuthDto, Role.ADMIN));
+    }
+
+
+    @Operation(summary = "Add product to the shop")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Product has been successfully added",
+            content = @Content(schema = @Schema(hidden = true)))
+    @PostMapping("create-product")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> createProduct(@RequestBody ProductShopDto productShopDto) {
+        productService.createProduct(productShopDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

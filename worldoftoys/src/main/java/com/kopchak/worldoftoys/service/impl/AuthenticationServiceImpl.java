@@ -81,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public TokenAuthDto authenticate(UserAuthDto userAuthDto, Role role) {
         String username = userAuthDto.getEmail();
         if (!userService.isUserRegistered(username) || !userService.isPasswordsMatch(username, userAuthDto.getPassword())
-            || !userService.hasProperRoleForAuthentication(username, role)) {
+                || !userService.hasProperRoleForAuthentication(username, role)) {
             throw new UserNotFoundException(HttpStatus.UNAUTHORIZED, "Bad user credentials!");
         }
         if (!userService.isUserActivated(username)) {
