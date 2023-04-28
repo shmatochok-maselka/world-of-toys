@@ -1,9 +1,6 @@
 package com.kopchak.worldoftoys.model.product.category;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,6 +18,7 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 60, unique = true)
     @NotBlank(message = "Name is mandatory")
     @Size(max = 60, message = "Name must be up to 60 characters long")
     private String name;

@@ -4,6 +4,7 @@ import com.github.slugify.Slugify;
 import com.kopchak.worldoftoys.model.product.category.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -20,11 +21,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(length = 60)
+    @Column(unique = true, length = 60)
     @NotBlank(message = "Name is mandatory")
     @Size(min = 3, max = 60, message = "Name must be up to 60 characters long")
     private String name;
-    @Column(length = 80)
+    @Column(unique = true, length = 80)
     @NotBlank(message = "Slug is mandatory")
     @Size(min = 3, max = 80, message = "Slug must be up to 80 characters long")
     private String slug;
@@ -38,31 +39,31 @@ public class Product {
     @Size(max = 200, message = "Image must be up to 200 characters long")
     private String image;
 
-    @NotBlank(message = "Price is mandatory")
+    @NotNull(message = "Price is mandatory")
     private BigDecimal price;
 
     @ManyToOne
-    @NotBlank(message = "Origin category is mandatory")
+    @NotNull(message = "Origin category is mandatory")
     @JoinColumn(name = "origin_id")
     private OriginCategory originCategory;
 
     @ManyToOne
-    @NotBlank(message = "Gender category is mandatory")
+    @NotNull(message = "Gender category is mandatory")
     @JoinColumn(name = "gender_id")
     private GenderCategory genderCategory;
 
     @ManyToOne
-    @NotBlank(message = "Brand category is mandatory")
+    @NotNull(message = "Brand category is mandatory")
     @JoinColumn(name = "brand_id")
     private BrandCategory brandCategory;
 
     @ManyToOne
-    @NotBlank(message = "Type category is mandatory")
+    @NotNull(message = "Type category is mandatory")
     @JoinColumn(name = "type_id")
     private TypeCategory typeCategory;
 
     @ManyToMany
-    @NotBlank(message = "Age categories is mandatory")
+    @NotNull(message = "Age categories is mandatory")
     private Set<AgeCategory> ageCategory;
 
     @PrePersist
