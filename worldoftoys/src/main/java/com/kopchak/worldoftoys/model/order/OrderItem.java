@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @Builder
@@ -19,5 +21,5 @@ public class OrderItem {
     @Builder.Default
     @NonNull
     @Min(value = 1, message = "Quantity must be greater than or equal to 1")
-    private Integer quantity = 1;
+    private BigInteger quantity = BigInteger.ONE;
 }

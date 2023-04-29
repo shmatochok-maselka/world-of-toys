@@ -2,12 +2,14 @@ package com.kopchak.worldoftoys.dto.product;
 
 import com.kopchak.worldoftoys.model.product.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,11 @@ public class ProductShopDto {
     @NotNull(message = "Price is mandatory")
     private BigDecimal price;
 
+    @Builder.Default
+    @NonNull
+    @Min(value = 0, message = "Available quantity must be greater than or equal to 0")
+    private BigInteger availableQuantity = BigInteger.ZERO;
+
     @NotNull(message = "Origin category is mandatory")
     private ProductCategoryDto originCategory;
 
@@ -60,6 +67,7 @@ public class ProductShopDto {
         this.description = product.getDescription();
         this.image = product.getImage();
         this.price = product.getPrice();
+        this.availableQuantity = product.getAvailableQuantity();
         this.originCategory = new ProductCategoryDto(product.getOriginCategory());
         this.genderCategory = new ProductCategoryDto(product.getGenderCategory());
         this.brandCategory = new ProductCategoryDto(product.getBrandCategory());

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Getter
 @Setter
@@ -16,5 +17,5 @@ public class CartItemResponseDto {
     private String slug;
     private String image;
     private BigDecimal price;
-    private Integer quantity;
+    private BigInteger quantity;
 }

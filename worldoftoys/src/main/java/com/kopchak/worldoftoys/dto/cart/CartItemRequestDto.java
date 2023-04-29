@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @Builder
@@ -21,5 +23,5 @@ public class CartItemRequestDto {
     @Builder.Default
     @NonNull
     @Min(value = 1, message = "Quantity must be greater than or equal to 1")
-    private Integer quantity = 1;
+    private BigInteger quantity = BigInteger.ONE;
 }

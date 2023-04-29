@@ -3,12 +3,14 @@ package com.kopchak.worldoftoys.model.product;
 import com.github.slugify.Slugify;
 import com.kopchak.worldoftoys.model.product.category.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Set;
 
 @Getter
@@ -41,6 +43,11 @@ public class Product {
 
     @NotNull(message = "Price is mandatory")
     private BigDecimal price;
+
+    @Builder.Default
+    @NonNull
+    @Min(value = 0, message = "Available quantity must be greater than or equal to 0")
+    private BigInteger availableQuantity = BigInteger.ZERO;
 
     @ManyToOne
     @NotNull(message = "Origin category is mandatory")
