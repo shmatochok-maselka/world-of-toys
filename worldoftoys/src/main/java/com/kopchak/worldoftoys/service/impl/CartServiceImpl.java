@@ -29,17 +29,13 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public void addProductToCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
+    public String addProductToCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
         CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
-        CartItem cartItem = cartItemsRepository.searchById(cartItemId);
-        if(cartItem == null){
-            cartItem = new CartItem();
-            cartItem.setId(cartItemId);
-            cartItem.setQuantity(cartItemRequestDto.getQuantity());
-        }else {
-            cartItem.setQuantity(cartItem.getQuantity() + cartItemRequestDto.getQuantity());
-        }
-        cartItemsRepository.save(cartItem);
+        CartItem cartItem = cartItemsRepository.findById(cartItemId).orElse(new CartItem());
+        cartItem.setQuantity(cartItem.getId() == null ? cartItemRequestDto.getQuantity() :
+                cartItem.getQuantity().add(cartItemRequestDto.getQuantity()));
+        cartItem.setId(cartItemId);
+        return updateCartItemQuantityBasedOnStock(cartItem, cartItemRequestDto.getSlug());
     }
 
     @Override
@@ -49,16 +45,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateCartItemQuantity(CartItemRequestDto cartItemRequestDto, Principal principal) {
+    public String updateCartItemQuantity(CartItemRequestDto cartItemRequestDto, Principal principal) {
         CartItemId cartItemId = getCartItemId(cartItemRequestDto, principal);
         CartItem cartItem = cartItemsRepository.findById(cartItemId).orElseThrow(() ->
                 new ProductNotFoundException(HttpStatus.NOT_FOUND, "There is no such product in the cart"));
-        cartItemsRepository.updateCartItemQuantity(cartItem.getId(), cartItemRequestDto.getQuantity());
+        cartItem.setQuantity(cartItemRequestDto.getQuantity());
+        return updateCartItemQuantityBasedOnStock(cartItem, cartItemRequestDto.getSlug());
     }
 
     @Override
     public void removeProductFromCart(CartItemRequestDto cartItemRequestDto, Principal principal) {
-        cartItemsRepository.deleteCartItemsById(getCartItemId(cartItemRequestDto, principal));
+        cartItemsRepository.deleteById(getCartItemId(cartItemRequestDto, principal));
     }
 
     private User getUserByPrincipal(Principal principal) {
@@ -74,5 +71,14 @@ public class CartServiceImpl implements CartService {
             throw new ProductNotFoundException(HttpStatus.NOT_FOUND, "Product does not exist!");
         }
         return new CartItemId(user, product);
+    }
+
+    private String updateCartItemQuantityBasedOnStock(CartItem cartItem, String productSlug){
+        Product product = productRepository.findBySlug(productSlug);
+        boolean isCartItemQuantityAvailable = product.getAvailableQuantity().compareTo(cartItem.getQuantity()) >= 0;
+        cartItem.setQuantity(isCartItemQuantityAvailable ? cartItem.getQuantity() : product.getAvailableQuantity());
+        cartItemsRepository.save(cartItem);
+        return isCartItemQuantityAvailable ? "The product added to the cart, or its quantity updated" :
+                "Only " + cartItem.getQuantity() + " products are available in the store";
     }
 }

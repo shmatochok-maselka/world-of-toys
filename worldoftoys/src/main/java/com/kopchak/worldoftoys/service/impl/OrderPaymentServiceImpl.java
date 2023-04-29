@@ -153,7 +153,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         var cartProducts = cartItemsRepository.findAllProductsByUserId(user.getId());
         BigDecimal totalPriceOfProducts = cartProducts
                 .stream()
-                .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity().longValue())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return totalPriceOfProducts.add(shippingOption.getPrice());
     }

@@ -48,15 +48,14 @@ public class CartController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = "/add-product")
-    public ResponseEntity<?> addProductToCart(
+    public ResponseEntity<String> addProductToCart(
             @Valid @Schema(
                     description = "The data of product to be added to the cart",
                     implementation = CartItemRequestDto.class)
             @RequestBody CartItemRequestDto cartItemRequestDTO,
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", description = "JWT auth token", required = true,
                     example = "Bearer access_token") Principal principal) {
-        cartService.addProductToCart(cartItemRequestDTO, principal);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(cartService.addProductToCart(cartItemRequestDTO, principal), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get all products from the cart",
@@ -93,7 +92,7 @@ public class CartController {
     @Operation(summary = "Update product quantity in the cart")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
+                    responseCode = "200",
                     description = "Product quantity has been successfully updated in the cart",
                     content = @Content),
             @ApiResponse(responseCode = "404",
@@ -116,8 +115,7 @@ public class CartController {
                     description = "JWT auth token",
                     required = true,
                     example = "Bearer access_token") Principal principal) {
-        cartService.updateCartItemQuantity(cartItemRequestDto, principal);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(cartService.updateCartItemQuantity(cartItemRequestDto, principal), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete product from the cart")
