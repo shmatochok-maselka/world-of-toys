@@ -69,7 +69,7 @@ public class Product {
     @JoinColumn(name = "type_id")
     private TypeCategory typeCategory;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @NotNull(message = "Age categories is mandatory")
     private Set<AgeCategory> ageCategory;
 

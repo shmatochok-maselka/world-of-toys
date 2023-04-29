@@ -14,12 +14,14 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemRequestDto {
-    @Schema(description = "Unique product identifier in a URL", example = "teddy-bear", required = true)
+    @Schema(description = "Unique product identifier in a URL", example = "teddy-bear",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Slug is mandatory")
     @Size(min = 3, max = 80, message = "Slug must be up to 80 characters long")
     private String slug;
 
-    @Schema(description = "Quantity of product in the cart", example = "1")
+    @Schema(description = "Quantity of product in the cart", example = "1",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Builder.Default
     @NonNull
     @Min(value = 1, message = "Quantity must be greater than or equal to 1")
