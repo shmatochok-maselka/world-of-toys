@@ -3,8 +3,11 @@ package com.kopchak.worldoftoys.model.blog;
 import com.github.slugify.Slugify;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -35,6 +38,17 @@ public class BlogPost {
     @NotBlank(message = "Content is mandatory")
     @Size(min = 250, max = 1500, message = "Content must be up to 250 characters long")
     private String content;
+
+    @Column(length = 120)
+    @NotBlank(message = "Author is mandatory")
+    @Size(max = 120, message = "Author must be up to 120 characters long")
+    private String author;
+
+    @Column(nullable = false)
+    @NotNull
+    private LocalDate createdAt;
+
+    private LocalDate updatedAt;
 
     @PrePersist
     public void setSlug() {
