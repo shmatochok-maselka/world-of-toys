@@ -34,9 +34,9 @@ public class BlogPost {
     @Size(max = 200, message = "Image must be up to 200 characters long")
     private String image;
 
-    @Column(length = 1500)
+    @Column(length = 2000)
     @NotBlank(message = "Content is mandatory")
-    @Size(min = 250, max = 1500, message = "Content must be up to 250 characters long")
+    @Size(min = 250, max = 2000, message = "Content must be up to 250 characters long")
     private String content;
 
     @Column(length = 120)

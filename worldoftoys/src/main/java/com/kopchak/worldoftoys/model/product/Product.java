@@ -29,9 +29,9 @@ public class Product {
     @Size(min = 3, max = 80, message = "Slug must be up to 80 characters long")
     private String slug;
 
-    @Column(length = 250)
+    @Column(length = 500)
     @NotBlank(message = "Description is mandatory")
-    @Size(max = 250, message = "Description must be up to 250 characters long")
+    @Size(max = 500, message = "Description must be up to 250 characters long")
     private String description;
 
     @Column(length = 200)
